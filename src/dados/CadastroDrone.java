@@ -1,12 +1,12 @@
 package dados;
 
 public class CadastroDrone {
-    String codigo;
-    String custo;
-    String autonomia;
-    String peso;
-    String protecao;
-    String tipoCarga;
+    private String codigo;
+    private String custo;
+    private String autonomia;
+    private String peso;
+    private String protecao;
+    private String tipoCarga;
 
     public CadastroDrone(String codigo, String custo, String autonomia, String peso, String protecao, String tipoCarga) {
         this.codigo = codigo;
@@ -17,7 +17,19 @@ public class CadastroDrone {
         this.tipoCarga = tipoCarga;
     }
 
+    public String getCodigo() {
+        return codigo;
+    }
+
+    @Override
     public String toString() {
-        return "Codigo:" + codigo + "\n" + "Custo:" + custo + "\n" + "Autonomia:" + autonomia + "\n" + "Peso:" + peso + "\n" + "Categoria:" + tipoCarga + "-" + protecao;
+        return "CadastroDrone{" +
+                "codigo='" + codigo + '\'' +
+                ", custo='" + custo + '\'' +
+                ", autonomia='" + autonomia + '\'' +
+                ", peso='" + peso + '\'' +
+                ", protecao='" + protecao + '\'' +
+                ", tipoCarga='" + tipoCarga + '\'' +
+                '}';
     }
 }

@@ -1,57 +1,80 @@
+package dados;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
-public class DronePessoalGUI extends JFrame {
+public class Tela extends JFrame {
+    private JPanel panel1;
+    private JTextField textField1;
+    private JTextField textField2;
+    private JTextField textField3;
+    private JTextField textField4;
+    private JTextField textField5;
+    private JLabel codDrone;
+    private JLabel custoDrone;
+    private JLabel autonomiaDrone;
+    private JLabel pesoDrone;
+    private JLabel protecaoDrone;
+    private JTextArea areaDeTexto;
+    private JButton cadastrarButton;
+    private JButton limparButton;
+    private JButton mostrarDadosButton;
+    private JButton sairButton;
+    private JRadioButton cargaInanimadaRadioButton;
+    private JRadioButton cargaVivaRadioButton;
+    private ButtonGroup doisBotoes;
+
     private final Drones droneService = new Drones();
     private final JTextField codigoField = new JTextField(10);
     private final JTextField modeloField = new JTextField(20);
     private final JTextArea mensagensArea = new JTextArea(10, 30);
 
-    public DronePessoalGUI() {
+    private ArrayList<CadastroDrone> drones = new ArrayList<>();
+
+    public Tela() {
         setTitle("Cadastro de Drone Pessoal");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        JPanel panel = new JPanel();
-        panel.setLayout(new FlowLayout());
-
+        panel1 = new JPanel();
+        panel1.setLayout(new FlowLayout());
 
         ImageIcon icon = new ImageIcon("src/droneIcon.png");
         setIconImage(icon.getImage());
 
+        panel1.add(new JLabel("Código:"));
+        panel1.add(codigoField);
 
-        panel.add(new JLabel("Código:"));
-        panel.add(codigoField);
+        panel1.add(new JLabel("Modelo:"));
+        panel1.add(modeloField);
 
-        panel.add(new JLabel("Modelo:"));
-        panel.add(modeloField);
+        cadastrarButton = new JButton("Cadastrar");
+        limparButton = new JButton("Limpar");
+        mostrarDadosButton = new JButton("Mostrar Drones");
+        sairButton = new JButton("Sair");
 
-        JButton cadastrarButton = new JButton("Cadastrar");
-        JButton limparButton = new JButton("Limpar");
-        JButton mostrarButton = new JButton("Mostrar Drones");
-        JButton sairButton = new JButton("Sair");
+        panel1.add(cadastrarButton);
+        panel1.add(limparButton);
+        panel1.add(mostrarDadosButton);
+        panel1.add(sairButton);
 
-        panel.add(cadastrarButton);
-        panel.add(limparButton);
-        panel.add(mostrarButton);
-        panel.add(sairButton);
-
-        panel.setBackground(Color.lightGray);
-        add(panel);
+        panel1.setBackground(Color.lightGray);
+        add(panel1);
 
         mensagensArea.setEditable(false);
-        panel.add(new JScrollPane(mensagensArea));
+        panel1.add(new JScrollPane(mensagensArea));
 
         cadastrarButton.addActionListener(e -> cadastrarDrone());
-
         limparButton.addActionListener(e -> limparCampos());
-
-        mostrarButton.addActionListener(e -> mostrarDrones());
-
+        mostrarDadosButton.addActionListener(e -> mostrarDrones());
         sairButton.addActionListener(e -> System.exit(0));
-
 
         setLocationRelativeTo(null);
         setResizable(false);
-        setSize(500,300);
+        setSize(500, 300);
     }
 
     private void cadastrarDrone() {
@@ -72,15 +95,15 @@ public class DronePessoalGUI extends JFrame {
             }
         } catch (NumberFormatException e) {
             mensagensArea.setText("Erro: O código deve ser um número inteiro.");
-            if(codigoField.getText().isBlank())
+            if (codigoField.getText().isBlank())
                 mensagensArea.setText("Erro: O código do drone não pode estar vazio.");
         }
     }
 
     private void limparCampos() {
-        codigoField.setText(" ");
-        modeloField.setText(" ");
-        mensagensArea.setText(" ");
+        codigoField.setText("");
+        modeloField.setText("");
+        mensagensArea.setText("");
     }
 
     private void mostrarDrones() {
@@ -95,4 +118,10 @@ public class DronePessoalGUI extends JFrame {
         }
     }
 
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            Tela frame = new Tela();
+            frame.setVisible(true);
+        });
+    }
 }

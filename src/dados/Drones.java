@@ -1,25 +1,21 @@
-import java.util.ArrayList;
-import java.util.Comparator;
+package dados;
 
-public class Drones {
-    private final ArrayList<DronePessoal> drones = new ArrayList<>();
+public abstract class Drones {
+    private int codigo;
+    private String modelo;
 
-    public boolean cadastrarDrone(DronePessoal novoDrone) {
-        for (DronePessoal drone : drones) {
-            if (drone.getCodigo() == novoDrone.getCodigo()) {
-                return false;
-            }
-        }
-        drones.add(novoDrone);
-        drones.sort(Comparator.comparingInt(DronePessoal::getCodigo));
-        return true;
+    public Drones(int codigo, String modelo) {
+        this.codigo = codigo;
+        this.modelo = modelo;
     }
 
-    public ArrayList<DronePessoal> listarDrones() {
-        return new ArrayList<DronePessoal>(drones);
+    public int getCodigo() {
+        return codigo;
     }
 
-    public boolean isVazio() {
-        return drones.isEmpty();
+    public String getModelo() {
+        return modelo;
     }
+
+    public abstract double calcularCustoVariado();
 }

@@ -1,8 +1,5 @@
 package dados;
 
-import dados.Transporte;
-import dados.Estado;
-
 public class TransporteCargaInanimada extends Transporte {
     private boolean cargaPerigosa;
 
@@ -11,16 +8,13 @@ public class TransporteCargaInanimada extends Transporte {
         this.cargaPerigosa = cargaPerigosa;
     }
 
-    public boolean isCargaPerigosa() {
-        return cargaPerigosa;
-    }
-
-    public void setCargaPerigosa(boolean cargaPerigosa) {
-        this.cargaPerigosa = cargaPerigosa;
-    }
-
     @Override
     public double calculaCusto() {
-        return 0;
+        double distancia = calcularDistancia();
+        double custoVariado = getDrone().calcularCustoVariado();
+        double acrescimo = cargaPerigosa ? 500.0 : 0.0;
+        return (custoVariado * distancia) + acrescimo;
     }
+
+    // Getters e setters omitidos para brevidade
 }

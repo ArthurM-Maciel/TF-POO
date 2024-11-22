@@ -1,6 +1,8 @@
+package dados;
+
 public class DronePessoal {
-    private final int codigo;
-    private final String modelo;
+    private int codigo;
+    private String modelo;
 
     public DronePessoal(int codigo, String modelo) {
         this.codigo = codigo;
@@ -11,8 +13,15 @@ public class DronePessoal {
         return codigo;
     }
 
+    public String getModelo() {
+        return modelo;
+    }
+
     @Override
     public String toString() {
-        return "Código: " + codigo + ", Modelo: " + modelo;
+        return "DronePessoal{" +
+                "codigo=" + codigo +
+                ", modelo='" + modelo + '\'' +
+                '}';
     }
 }
