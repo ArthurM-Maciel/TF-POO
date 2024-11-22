@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-public class Drone {
+public class DroneCarga {
     private ArrayList<CadastroDrone> drones = new ArrayList<>();
 
     private JPanel panel1;
@@ -34,7 +34,7 @@ public class Drone {
         return panel1;
     }
 
-    public Drone() {
+    public DroneCarga() {
         doisBotoes = new ButtonGroup();
         doisBotoes.add(cargaInanimadaRadioButton);
         doisBotoes.add(cargaVivaRadioButton);
