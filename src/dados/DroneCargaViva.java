@@ -1,6 +1,6 @@
 package dados;
 
-public class DroneCargaViva extends Drone {
+public class DroneCargaViva extends Drones {
     private boolean climatizado;
 
     public DroneCargaViva(int codigo, String modelo, boolean climatizado) {
@@ -12,6 +12,4 @@ public class DroneCargaViva extends Drone {
     public double calcularCustoVariado() {
         return climatizado ? 20.0 : 10.0;
     }
-
-    // Getters and setters omitted for brevity
 }
