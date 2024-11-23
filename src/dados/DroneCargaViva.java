@@ -1,6 +1,6 @@
 package dados;
 
-public class DroneCargaViva extends Drones {
+public class DroneCargaViva extends DroneCarga {
     private boolean climatizado;
 
     public DroneCargaViva(int codigo, String modelo, boolean climatizado) {
