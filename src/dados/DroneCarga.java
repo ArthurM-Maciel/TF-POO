@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-public abstract class DroneCarga extends Drone {
+public abstract class DroneCarga extends Drones {
     private ArrayList<CadastroDrone> drones = new ArrayList<>();
 
     public DroneCarga(int codigo, String modelo) {

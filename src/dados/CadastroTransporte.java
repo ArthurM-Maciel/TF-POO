@@ -6,10 +6,12 @@ import java.util.List;
 public class CadastroTransporte {
     private List<Transporte> transportesPendentes;
     private List<Transporte> transportesCadastrados;
+    private List<DronePessoal> drones;
 
     public CadastroTransporte() {
         transportesPendentes = new ArrayList<>();
         transportesCadastrados = new ArrayList<>();
+        drones = new ArrayList<>();
     }
 
     public String cadastrarTransporte(String nomeCliente, String numero, String descricao, String peso) {
@@ -88,6 +90,24 @@ public class CadastroTransporte {
                 break;
             }
         }
+    }
+
+    public boolean cadastrarDrone(DronePessoal drone) {
+        for (DronePessoal d : drones) {
+            if (d.getCodigo() == drone.getCodigo()) {
+                return false;
+            }
+        }
+        drones.add(drone);
+        return true;
+    }
+
+    public boolean isVazio() {
+        return drones.isEmpty();
+    }
+
+    public List<DronePessoal> listarDrones() {
+        return new ArrayList<>(drones);
     }
 
     private class TransporteConcreto extends Transporte {
