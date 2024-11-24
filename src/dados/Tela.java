@@ -404,11 +404,4 @@ public class Tela extends JFrame {
 
         JOptionPane.showMessageDialog(this, relatorio.toString());
     }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            Tela frame = new Tela();
-            frame.setVisible(true);
-        });
-    }
 }

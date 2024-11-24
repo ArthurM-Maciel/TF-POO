@@ -1,12 +1,10 @@
 package dados;
 
-import javax.swing.*;
+import aplicacao.ACMEAirDrones;
 
 public class Main {
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            Tela frame = new Tela();
-            frame.setVisible(true);
-        });
+        ACMEAirDrones acmeAirDrones = new ACMEAirDrones();
+        acmeAirDrones.executar();
     }
 }

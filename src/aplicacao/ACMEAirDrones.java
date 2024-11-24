@@ -1,12 +1,15 @@
 package aplicacao;
 
-import org.w3c.dom.ls.LSOutput;
+import dados.Tela;
+
+import javax.swing.*;
 
 public class ACMEAirDrones {
-
-
 	public void executar() {
 
+		SwingUtilities.invokeLater(() -> {
+			Tela frame = new Tela();
+			frame.setVisible(true);
+		});
 	}
-
 }
