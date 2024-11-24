@@ -98,6 +98,10 @@ public class CadastroTransporte {
                 return false;
             }
         }
+        int posicao = 0;
+        while (posicao<drones.size() && drones.get(posicao).getCodigo() < drone.getCodigo()){
+            posicao++;
+        }
         drones.add(drone);
         return true;
     }
