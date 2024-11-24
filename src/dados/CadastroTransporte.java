@@ -1,17 +1,46 @@
 package dados;
-
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 public class CadastroTransporte {
-    private List<Transporte> transportesPendentes;
     private List<Transporte> transportesCadastrados;
-    private List<DronePessoal> drones;
+    private Queue<Transporte> transportesPendentes;
+    private List<Drone> dronesDisponiveis;
 
     public CadastroTransporte() {
-        transportesPendentes = new ArrayList<>();
+        transportesPendentes = new LinkedList<>();
+        dronesDisponiveis = new ArrayList<>();
         transportesCadastrados = new ArrayList<>();
-        drones = new ArrayList<>();
+    }
+
+    public String processarTransportesPendentes() {
+        if (transportesPendentes.isEmpty()) {
+            return "Não há transportes na fila de transportes pendentes.";
+        }
+
+
+        Queue<Transporte> naoAlocados = new LinkedList<>();
+        while (!transportesPendentes.isEmpty()) {
+            Transporte transporte = transportesPendentes.poll();
+            boolean alocado = false;
+
+            for (Drone drone : dronesDisponiveis) {
+                if (drone.podeAtender(transporte)) {
+                    transporte.setSituacao(Estado.ALOCADO);
+                    alocado = true;
+                    break;
+                }
+            }
+
+            if (!alocado) {
+                naoAlocados.add(transporte);
+            }
+        }
+
+        transportesPendentes = naoAlocados;
+        return "Processamento de transportes pendentes concluído.";
     }
 
     public String cadastrarTransporte(String nomeCliente, String numero, String descricao, String peso) {
@@ -20,41 +49,33 @@ public class CadastroTransporte {
         }
 
         try {
-            int num = Integer.parseInt(numero);
+            int numeroInt = Integer.parseInt(numero);
             double pesoDouble = Double.parseDouble(peso);
-
-            for (Transporte t : transportesPendentes) {
-                if (t.getNumero() == num) {
-                    return "Erro: Número do transporte já existe.";
-                }
-            }
-
-            Transporte transporte = new TransporteConcreto(num, nomeCliente, descricao, pesoDouble, 0, 0, 0, 0, Estado.PENDENTE);
+            Transporte transporte = new TiposDeTransporte(numeroInt, nomeCliente, descricao, pesoDouble, 0, 0, 0, 0, Estado.PENDENTE);
             transportesPendentes.add(transporte);
             return "Transporte cadastrado com sucesso!";
         } catch (NumberFormatException e) {
-            return "Erro ao cadastrar transporte: número ou peso inválido.";
+            return "Erro: Número ou peso inválido.";
         }
     }
-
     public String mostrarTransportesPendentes() {
         if (transportesPendentes.isEmpty()) {
-            return "Nenhum transporte pendente.";
+            return "Não há transportes pendentes.";
         }
         StringBuilder sb = new StringBuilder("Transportes Pendentes:\n");
         for (Transporte t : transportesPendentes) {
-            sb.append(t.getNumero()).append(" - ").append(t.getNomeCliente()).append(" - ").append(t.getDescricao()).append("\n");
+            sb.append(t).append("\n");
         }
         return sb.toString();
     }
 
     public String mostrarTransportes() {
         if (transportesCadastrados.isEmpty()) {
-            return "Nenhum transporte cadastrado.";
+            return "Não há transportes cadastrados.";
         }
         StringBuilder sb = new StringBuilder("Transportes Cadastrados:\n");
         for (Transporte t : transportesCadastrados) {
-            sb.append(t.getNumero()).append(" - ").append(t.getNomeCliente()).append(" - ").append(t.getDescricao()).append("\n");
+            sb.append(t).append("\n");
         }
         return sb.toString();
     }
@@ -74,45 +95,49 @@ public class CadastroTransporte {
     }
 
     public void cancelarTransporte(int numero) {
-        for (Transporte t : transportesCadastrados) {
-            if (t.getNumero() == numero && (t.getSituacao() == Estado.PENDENTE || t.getSituacao() == Estado.ALOCADO)) {
-                t.cancelar();
-                transportesCadastrados.remove(t);
-                break;
-            }
-        }
+        transportesCadastrados.removeIf(t -> t.getNumero() == numero);
     }
 
     public void terminarTransporte(int numero) {
         for (Transporte t : transportesCadastrados) {
-            if (t.getNumero() == numero && t.getSituacao() == Estado.ALOCADO) {
-                t.terminar();
+            if (t.getNumero() == numero) {
+                t.setSituacao(Estado.TERMINADO);
                 break;
             }
         }
     }
+    public List<Drone> getDronesDisponiveis() {
+        return new ArrayList<>(dronesDisponiveis);
+    }
 
-    public boolean cadastrarDrone(DronePessoal drone) {
-        for (DronePessoal d : drones) {
-            if (d.getCodigo() == drone.getCodigo()) {
-                return false;
+    public List<Transporte> getTransportesCadastrados() {
+        return new ArrayList<>(transportesCadastrados);
+    }
+
+    // In CadastroTransporte.java
+
+    public Transporte buscarTransporte(int numero) {
+        for (Transporte t : transportesCadastrados) {
+            if (t.getNumero() == numero) {
+                return t;
             }
         }
-        int posicao = 0;
-        while (posicao<drones.size() && drones.get(posicao).getCodigo() < drone.getCodigo()){
-            posicao++;
+        for (Transporte t : transportesPendentes) {
+            if (t.getNumero() == numero) {
+                return t;
+            }
         }
-        drones.add(drone);
-        return true;
+        return null;
     }
 
-    public boolean isVazio() {
-        return drones.isEmpty();
+    public void alterarSituacaoTransporte(int numero, String novaSituacao) {
+        Transporte transporte = buscarTransporte(numero);
+        if (transporte != null) {
+            transporte.setSituacao(Estado.valueOf(novaSituacao));
+        }
     }
 
-    public List<DronePessoal> listarDrones() {
-        return new ArrayList<>(drones);
-    }
+
 
     private class TransporteConcreto extends Transporte {
         public TransporteConcreto(int numero, String nomeCliente, String descricao, double peso, double latitudeOrigem, double latitudeDestino, double longitudeOrigem, double longitudeDestino, Estado situacao) {
@@ -121,7 +146,11 @@ public class CadastroTransporte {
 
         @Override
         public double calculaCusto() {
-            return getPeso() * 5; // Simple example calculation based on weight
+            return 0;
         }
+
+        // In CadastroTransporte.java
+
+
     }
 }

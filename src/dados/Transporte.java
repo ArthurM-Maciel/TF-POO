@@ -23,6 +23,10 @@ public abstract class Transporte {
         this.situacao = situacao;
     }
 
+    public void setSituacao(Estado situacao) {
+        this.situacao = situacao;
+    }
+
     public int getNumero() {
         return numero;
     }
