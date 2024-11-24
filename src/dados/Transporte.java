@@ -54,7 +54,7 @@ public abstract class Transporte {
     public abstract double calculaCusto();
 
     protected double calcularDistancia() {
-        // Implementar lógica de cálculo de distância
-        return 0;
+        // Implementar cálculo de distância
+        return 0.0;
     }
 }
