@@ -114,6 +114,24 @@ public class CadastroTransporte {
         return new ArrayList<>(drones);
     }
 
+    public List<Transporte> getTransportes() {
+        List<Transporte> todosTransportes = new ArrayList<>(transportesPendentes);
+        todosTransportes.addAll(transportesCadastrados);
+        return todosTransportes;
+    }
+
+    public void setTransportes(List<Transporte> transportes) {
+        transportesPendentes.clear();
+        transportesCadastrados.clear();
+        for (Transporte transporte : transportes) {
+            if (transporte.getSituacao() == Estado.PENDENTE) {
+                transportesPendentes.add(transporte);
+            } else {
+                transportesCadastrados.add(transporte);
+            }
+        }
+    }
+
     private class TransporteConcreto extends Transporte {
         public TransporteConcreto(int numero, String nomeCliente, String descricao, double peso, double latitudeOrigem, double latitudeDestino, double longitudeOrigem, double longitudeDestino, Estado situacao) {
             super(numero, nomeCliente, descricao, peso, latitudeOrigem, latitudeDestino, longitudeOrigem, longitudeDestino, situacao);
