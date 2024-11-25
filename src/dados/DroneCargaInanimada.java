@@ -21,4 +21,7 @@ public class DroneCargaInanimada  extends DroneCarga{
         return true;
     }
 
+    public boolean isProtegido() {
+        return protecao;
+    }
 }

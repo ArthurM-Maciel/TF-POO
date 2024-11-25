@@ -30,4 +30,11 @@ public class TransporteCargaViva extends Transporte {
     public double calculaCusto() {
         return 0;
     }
+
+    public double getTempMin() {
+        return temperaturaMinima;
+    }
+    public double getTempMax() {
+        return temperaturaMaxima;
+    }
 }

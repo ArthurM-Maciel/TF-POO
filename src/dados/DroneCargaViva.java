@@ -15,4 +15,7 @@ public class DroneCargaViva extends DroneCarga {
     }
 
 
+    public boolean isClimatizado() {
+        return climatizado;
+    }
 }

@@ -2,9 +2,7 @@ package dados;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.Objects;
 
 public class Tela extends JFrame {
@@ -451,7 +449,7 @@ public class Tela extends JFrame {
             }
         });
 
-        leituraSimulacaoButton.addActionListener(e -> {
+        leituraSimulacaoButton.addActionListener(_ -> {
             String nomeArquivo = JOptionPane.showInputDialog(this, "Digite o nome do arquivo de simulação (sem extensão):");
             if (nomeArquivo != null && !nomeArquivo.trim().isEmpty()) {
                 String mensagem = leituraSimulacao(nomeArquivo);
@@ -460,26 +458,26 @@ public class Tela extends JFrame {
                 JOptionPane.showMessageDialog(this, "Nome do arquivo inválido.");
             }
         });
-//
-//        salvarDadosButton.addActionListener(e -> {
-//            String nomeArquivo = JOptionPane.showInputDialog(this, "Digite o nome do arquivo para salvar os dados (sem extensão):");
-//            if (nomeArquivo != null && !nomeArquivo.trim().isEmpty()) {
-//                String mensagem = salvarDados(nomeArquivo);
-//                JOptionPane.showMessageDialog(this, mensagem);
-//            } else {
-//                JOptionPane.showMessageDialog(this, "Nome do arquivo inválido.");
-//            }
-//        });
-//
-//        carregarDadosButton.addActionListener(e -> {
-//            String nomeArquivo = JOptionPane.showInputDialog(this, "Digite o nome do arquivo para carregar os dados (sem extensão):");
-//            if (nomeArquivo != null && !nomeArquivo.trim().isEmpty()) {
-//                String mensagem = carregarDados(nomeArquivo);
-//                JOptionPane.showMessageDialog(this, mensagem);
-//            } else {
-//                JOptionPane.showMessageDialog(this, "Nome do arquivo inválido.");
-//            }
-//        });
+
+        salvarDadosButton.addActionListener(_ -> {
+            String nomeArquivo = JOptionPane.showInputDialog(this, "Digite o nome do arquivo para salvar os dados (sem extensão):");
+            if (nomeArquivo != null && !nomeArquivo.trim().isEmpty()) {
+                String mensagem = salvarDados(nomeArquivo);
+                JOptionPane.showMessageDialog(this, mensagem);
+            } else {
+                JOptionPane.showMessageDialog(this, "Nome do arquivo inválido.");
+            }
+        });
+
+        carregarDadosButton.addActionListener(_ -> {
+            String nomeArquivo = JOptionPane.showInputDialog(this, "Digite o nome do arquivo para carregar os dados (sem extensão):");
+            if (nomeArquivo != null && !nomeArquivo.trim().isEmpty()) {
+                String mensagem = carregarDados(nomeArquivo);
+                JOptionPane.showMessageDialog(this, mensagem);
+            } else {
+                JOptionPane.showMessageDialog(this, "Nome do arquivo inválido.");
+            }
+        });
 
         sairButton.addActionListener(_ -> System.exit(0));
 
@@ -492,7 +490,6 @@ public class Tela extends JFrame {
         String dronesFile = "src/dados/" + nomeArquivo + "-DRONES.CSV";
         String transportesFile = "src/dados/" + nomeArquivo + "-TRANSPORTES.CSV";
 
-        // Read drones data
         try (BufferedReader br = new BufferedReader(new FileReader(dronesFile))) {
             br.readLine();
             String linha;
@@ -521,7 +518,6 @@ public class Tela extends JFrame {
             mensagem.append("Erro ao ler o arquivo de drones: ").append(e.getMessage()).append("\n");
         }
 
-        // Read transportes data
         try (BufferedReader br = new BufferedReader(new FileReader(transportesFile))) {
             br.readLine();
             String linha;
@@ -569,4 +565,116 @@ public class Tela extends JFrame {
 
         return mensagem.toString();
     }
+    public String salvarDados(String nomeArquivo) {
+        StringBuilder mensagem = new StringBuilder();
+        String delimiter = ";";
+        String dronesFile = "src/dados/" + nomeArquivo + "-DRONES.CSV";
+        String transportesFile = "src/dados/" + nomeArquivo + "-TRANSPORTES.CSV";
+
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(dronesFile))) {
+            bw.write("tipo;codigo;custofixo;autonomia;qtdmaxpessoas_pesomaximo;protecao_climatizado\n");
+            for (Drone drone : cadastroTransporte.getDronesCadastrados()) {
+                if (drone instanceof DronePessoal dp) {
+                    bw.write("1" + delimiter + dp.getCodigo() + delimiter + dp.getCustoFixo() + delimiter + dp.getAutonomia() + delimiter + dp.getQtdMaxPessoas() + "\n");
+                } else if (drone instanceof DroneCargaInanimada dci) {
+                    bw.write("2" + delimiter + dci.getCodigo() + delimiter + dci.getCustoFixo() + delimiter + dci.getAutonomia() + delimiter + dci.getPesoMaximo() + delimiter + dci.isProtegido() + "\n");
+                } else if (drone instanceof DroneCargaViva dcv) {
+                    bw.write("3" + delimiter + dcv.getCodigo() + delimiter + dcv.getCustoFixo() + delimiter + dcv.getAutonomia() + delimiter + dcv.getPesoMaximo() + delimiter + dcv.isClimatizado() + "\n");
+                }
+            }
+            mensagem.append("Dados dos drones salvos com sucesso!\n");
+        } catch (IOException e) {
+            mensagem.append("Erro ao salvar dados dos drones: ").append(e.getMessage()).append("\n");
+        }
+
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(transportesFile))) {
+            bw.write("tipo;numero;nomecliente;descricao;peso;latorigem;longorigem;latdestino;longdestino;qtdpessoas_perigosa_tempmin;tempmax\n");
+            for (Transporte transporte : cadastroTransporte.getTransportesCadastrados()) {
+                if (transporte instanceof TransportePessoal tp) {
+                    bw.write("1" + delimiter + tp.getNumero() + delimiter + tp.getNomeCliente() + delimiter + tp.getDescricao() + delimiter + tp.getPeso() + delimiter + tp.getLatitudeOrigem() + delimiter + tp.getLongitudeOrigem() + delimiter + tp.getLatitudeDestino() + delimiter + tp.getLongitudeDestino() + delimiter + tp.getQtdPessoas() + "\n");
+                } else if (transporte instanceof TransporteCargaInanimada tci) {
+                    bw.write("2" + delimiter + tci.getNumero() + delimiter + tci.getNomeCliente() + delimiter + tci.getDescricao() + delimiter + tci.getPeso() + delimiter + tci.getLatitudeOrigem() + delimiter + tci.getLongitudeOrigem() + delimiter + tci.getLatitudeDestino() + delimiter + tci.getLongitudeDestino() + delimiter + tci.isPerigosa() + "\n");
+                } else if (transporte instanceof TransporteCargaViva tcv) {
+                    bw.write("3" + delimiter + tcv.getNumero() + delimiter + tcv.getNomeCliente() + delimiter + tcv.getDescricao() + delimiter + tcv.getPeso() + delimiter + tcv.getLatitudeOrigem() + delimiter + tcv.getLongitudeOrigem() + delimiter + tcv.getLatitudeDestino() + delimiter + tcv.getLongitudeDestino() + delimiter + tcv.getTempMin() + delimiter + tcv.getTempMax() + "\n");
+                }
+            }
+            mensagem.append("Dados dos transportes salvos com sucesso!\n");
+        } catch (IOException e) {
+            mensagem.append("Erro ao salvar dados dos transportes: ").append(e.getMessage()).append("\n");
+        }
+
+        return mensagem.toString();
     }
+
+    public String carregarDados(String nomeArquivo) {
+        StringBuilder mensagem = new StringBuilder();
+        String delimiter = ";";
+        String dronesFile = "src/dados/" + nomeArquivo + "-DRONES.CSV";
+        String transportesFile = "src/dados/" + nomeArquivo + "-TRANSPORTES.CSV";
+
+        try (BufferedReader br = new BufferedReader(new FileReader(dronesFile))) {
+            br.readLine();
+            String linha;
+            while ((linha = br.readLine()) != null) {
+                String[] dados = linha.split(delimiter);
+                try {
+                    int tipo = Integer.parseInt(dados[0]);
+                    String codigo = dados[1];
+                    double custoFixo = Double.parseDouble(dados[2]);
+                    double autonomia = Double.parseDouble(dados[3]);
+
+                    Drone drone;
+                    if (tipo == 1) {
+                        drone = new DronePessoal(codigo, custoFixo, autonomia, Integer.parseInt(dados[4]));
+                    } else if (tipo == 2) {
+                        drone = new DroneCargaInanimada(codigo, custoFixo, autonomia, Double.parseDouble(dados[4]), Boolean.parseBoolean(dados[5]));
+                    } else {
+                        drone = new DroneCargaViva(codigo, custoFixo, autonomia, Double.parseDouble(dados[4]), Boolean.parseBoolean(dados[5]));
+                    }
+                    mensagem.append(cadastroTransporte.cadastrarDrone(drone)).append("\n");
+                } catch (Exception e) {
+                    mensagem.append("Erro ao processar linha de drone: ").append(linha).append("\n");
+                }
+            }
+        } catch (IOException e) {
+            mensagem.append("Erro ao ler o arquivo de drones: ").append(e.getMessage()).append("\n");
+        }
+
+        try (BufferedReader br = new BufferedReader(new FileReader(transportesFile))) {
+            br.readLine();
+            String linha;
+            while ((linha = br.readLine()) != null) {
+                String[] dados = linha.split(delimiter);
+                try {
+                    int tipo = Integer.parseInt(dados[0]);
+                    int numero = Integer.parseInt(dados[1]);
+                    String nomeCliente = dados[2];
+                    String descricao = dados[3];
+                    double peso = Double.parseDouble(dados[4]);
+                    double latitudeOrigem = Double.parseDouble(dados[5]);
+                    double longitudeOrigem = Double.parseDouble(dados[6]);
+                    double latitudeDestino = Double.parseDouble(dados[7]);
+                    double longitudeDestino = Double.parseDouble(dados[8]);
+                    Estado situacao = Estado.PENDENTE;
+
+                    Transporte transporte;
+                    if (tipo == 1) {
+                        transporte = new TransportePessoal(numero, nomeCliente, descricao, peso, latitudeOrigem, latitudeDestino, longitudeOrigem, longitudeDestino, situacao, Integer.parseInt(dados[9]));
+                    } else if (tipo == 2) {
+                        transporte = new TransporteCargaInanimada(numero, nomeCliente, descricao, peso, latitudeOrigem, latitudeDestino, longitudeOrigem, longitudeDestino, situacao, Boolean.parseBoolean(dados[9]));
+                    } else {
+                        transporte = new TransporteCargaViva(numero, nomeCliente, descricao, peso, latitudeOrigem, latitudeDestino, longitudeOrigem, longitudeDestino, situacao, Double.parseDouble(dados[9]), Double.parseDouble(dados[10]));
+                    }
+                    cadastroTransporte.getTransportesPendentes().add(transporte);
+                    mensagem.append(cadastroTransporte.cadastrarTransporte(transporte)).append("\n");
+                } catch (Exception e) {
+                    mensagem.append("Erro ao processar linha de transporte: ").append(linha).append("\n");
+                }
+            }
+        } catch (IOException e) {
+            mensagem.append("Erro ao ler o arquivo de transportes: ").append(e.getMessage()).append("\n");
+        }
+
+        return mensagem.toString();
+    }
+}

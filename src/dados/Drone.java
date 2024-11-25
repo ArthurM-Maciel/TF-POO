@@ -30,6 +30,9 @@ public abstract class Drone implements Comparable<Drone> {
     public double getAutonomia() {
         return autonomia;
     }
+    public double getCustoFixo() {
+        return custoFixo;
+    }
 
     public double calcularDistancia(double lat1, double lon1, double lat2, double lon2) {
         final int R = 6371;
