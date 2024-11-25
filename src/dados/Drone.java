@@ -24,9 +24,11 @@ public abstract class Drone {
         return custoFixo + calculaCustoVariado();
     }
 
-    public boolean podeAtender(Transporte transporte) {
-        return true;
+    public String toString() {
+        return "Código: " + codigo + "\nCusto fixo: " + custoFixo + "\nAutonomia: " + autonomia + "\nPeso máximo: " + pesoMaximo + "\nClimatizado: " + climatizado;
     }
 
-    // Getters and setters
+    public Object getCodigo() {
+        return codigo;
+    }
 }

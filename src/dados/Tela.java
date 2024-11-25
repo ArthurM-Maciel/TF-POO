@@ -1,28 +1,42 @@
 package dados;
+
 import javax.swing.*;
 import java.awt.*;
-import java.util.List;
+import java.util.Objects;
 
 public class Tela extends JFrame {
-    private JTextField nomeClienteField;
-    private JTextField numeroTransporteField;
-    private JTextField descricaoTransporteField;
-    private JTextField pesoField;
-    private JTextArea mensagensArea;
     private CadastroTransporte cadastroTransporte;
+    private CadastroDrone cadastroDrone;
     private CardLayout cardLayout;
     private JPanel contentPanel;
     private JLabel tituloLabel;
 
+    // Campos para cadastro de Drone
+    private JTextField codigoDroneField;
+    private JTextField capacidadeDroneField;
+    private JTextField custoFixoDroneField;
+    private JComboBox<String> tipoDroneComboBox;
+    private JTextField autonomiaDroneField;
+    private JTextField pesoMaximoDroneField;
+    private JComboBox<String> climatizadoComboBox;
+    private JComboBox<String> protegidoComboBox;
+
+
+    // Campos para cadastro de Transporte
+    private JTextField numeroTransporteField;
+    private JTextField descricaoTransporteField;
+    private JTextField pesoTransporteField;
+
     public Tela() {
-        setTitle("Cadastro de Novo Transporte");
+        setTitle("ACMEAirDrones - Sistema de Gerenciamento");
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
         cadastroTransporte = new CadastroTransporte();
+        cadastroDrone = new CadastroDrone();
 
-        tituloLabel = new JLabel("MENU", SwingConstants.CENTER);
+        tituloLabel = new JLabel("MENU PRINCIPAL", SwingConstants.CENTER);
         tituloLabel.setFont(new Font("Arial", Font.BOLD, 24));
         tituloLabel.setForeground(Color.BLUE);
         add(tituloLabel, BorderLayout.NORTH);
@@ -39,369 +53,387 @@ public class Tela extends JFrame {
         gbcMenu.insets = new Insets(5, 5, 5, 5);
         gbcMenu.fill = GridBagConstraints.HORIZONTAL;
 
-        JButton cadastrarButton = new JButton("Cadastrar Novo Transporte");
+        // Botões do menu principal
+        JButton cadastrarDroneButton = new JButton("Cadastrar Novo Drone");
         gbcMenu.gridx = 0;
-        gbcMenu.gridy = 0;
-        menuPanel.add(cadastrarButton, gbcMenu);
-
-        JButton cadastrarDroneButton = new JButton("Cadastrar Drone Pessoal");
-        gbcMenu.gridx = 0;
-        gbcMenu.gridy = 1;
+        gbcMenu.gridy = -1;
         menuPanel.add(cadastrarDroneButton, gbcMenu);
 
-        JButton cadastrarDroneCargaVivaButton = new JButton("Cadastrar Drone de Carga Viva");
+        JComboBox tipoDroneComboBox = new JComboBox(new String[]{"Pessoal", "Carga Viva", "Carga Inanimada"});
+        gbcMenu.gridx = 1;
+        gbcMenu.gridy = -1;
+        menuPanel.add(tipoDroneComboBox, gbcMenu);
+
+        JButton cadastrarTransporteButton = new JButton("Cadastrar Novo Transporte");
+        gbcMenu.gridy = 1;
         gbcMenu.gridx = 0;
+        menuPanel.add(cadastrarTransporteButton, gbcMenu);
+
+        JComboBox tipoTransporteComboBox = new JComboBox(new String[]{"Pessoal", "Carga Viva", "Carga Inanimada"});
+        gbcMenu.gridx = 1;
+        gbcMenu.gridy = 1;
+        menuPanel.add(tipoTransporteComboBox, gbcMenu);
+
+        gbcMenu.gridx = 0;
+
+        JButton processarTransportesButton = new JButton("Processar Transportes Pendentes");
         gbcMenu.gridy = 2;
-        menuPanel.add(cadastrarDroneCargaVivaButton, gbcMenu);
-
-        JButton cadastrarDroneCargaInanimadaButton = new JButton("Cadastrar Drone de Carga Inanimada");
-        gbcMenu.gridx = 0;
-        gbcMenu.gridy = 3;
-        menuPanel.add(cadastrarDroneCargaInanimadaButton, gbcMenu);
-
-        JButton pendentesButton = new JButton("Transportes Pendentes");
-        gbcMenu.gridx = 0;
-        gbcMenu.gridy = 4;
-        menuPanel.add(pendentesButton, gbcMenu);
-
-        JButton cadastradosButton = new JButton("Transportes Cadastrados");
-        gbcMenu.gridx = 0;
-        gbcMenu.gridy = 5;
-        menuPanel.add(cadastradosButton, gbcMenu);
-
-        JButton processarButton = new JButton("Processar Transportes");
-        gbcMenu.gridx = 0;
-        gbcMenu.gridy = 6;
-        menuPanel.add(processarButton, gbcMenu);
+        menuPanel.add(processarTransportesButton, gbcMenu);
 
         JButton relatorioGeralButton = new JButton("Mostrar Relatório Geral");
-        gbcMenu.gridx = 0;
-        gbcMenu.gridy = 7;
+        gbcMenu.gridy = 3;
         menuPanel.add(relatorioGeralButton, gbcMenu);
 
+        JButton mostrarTransportesButton = new JButton("Mostrar Todos os Transportes");
+        gbcMenu.gridy = 4;
+        menuPanel.add(mostrarTransportesButton, gbcMenu);
+
         JButton alterarSituacaoButton = new JButton("Alterar Situação de Transporte");
-        gbcMenu.gridx = 0;
-        gbcMenu.gridy = 9;
+        gbcMenu.gridy = 5;
         menuPanel.add(alterarSituacaoButton, gbcMenu);
 
-        JButton sairButton = new JButton("Sair");
-        gbcMenu.gridx = 0;
+        JButton leituraSimulacaoButton = new JButton("Leitura de Simulação");
+        gbcMenu.gridy = 6;
+        menuPanel.add(leituraSimulacaoButton, gbcMenu);
+
+        JButton salvarDadosButton = new JButton("Salvar Dados");
+        gbcMenu.gridy = 7;
+        menuPanel.add(salvarDadosButton, gbcMenu);
+
+        JButton carregarDadosButton = new JButton("Carregar Dados");
         gbcMenu.gridy = 8;
+        menuPanel.add(carregarDadosButton, gbcMenu);
+
+        JButton sairButton = new JButton("Finalizar Sistema");
+        gbcMenu.gridy = 9;
         menuPanel.add(sairButton, gbcMenu);
 
-        JPanel mainMenuPanel = new JPanel(new GridBagLayout());
-        GridBagConstraints gbcMain = new GridBagConstraints();
-        gbcMain.insets = new Insets(10, 10, 10, 10);
-        gbcMain.fill = GridBagConstraints.BOTH;
-        gbcMain.gridx = 0;
-        gbcMain.gridy = 0;
-        gbcMain.weightx = 1;
-        gbcMain.weighty = 1;
-        gbcMain.anchor = GridBagConstraints.CENTER;
-        mainMenuPanel.add(menuPanel, gbcMain);
+        add(menuPanel, BorderLayout.CENTER);
 
-        contentPanel.add(mainMenuPanel, "Main Menu");
-
-        JPanel painelCadastro = new JPanel(new GridBagLayout());
-        painelCadastro.setBackground(Color.WHITE);
-        GridBagConstraints gbcCadastro = new GridBagConstraints();
-        gbcCadastro.insets = new Insets(10, 10, 10, 10);
-        gbcCadastro.fill = GridBagConstraints.HORIZONTAL;
-
-        gbcCadastro.gridx = 0;
-        gbcCadastro.gridy = 0;
-        painelCadastro.add(new JLabel("Nome do Cliente:"), gbcCadastro);
-        nomeClienteField = new JTextField(20);
-        gbcCadastro.gridx = 1;
-        painelCadastro.add(nomeClienteField, gbcCadastro);
-
-        gbcCadastro.gridx = 0;
-        gbcCadastro.gridy = 1;
-        painelCadastro.add(new JLabel("Número do Transporte:"), gbcCadastro);
-        numeroTransporteField = new JTextField(20);
-        gbcCadastro.gridx = 1;
-        painelCadastro.add(numeroTransporteField, gbcCadastro);
-
-        gbcCadastro.gridx = 0;
-        gbcCadastro.gridy = 2;
-        painelCadastro.add(new JLabel("Descrição do Transporte:"), gbcCadastro);
-        descricaoTransporteField = new JTextField(20);
-        gbcCadastro.gridx = 1;
-        painelCadastro.add(descricaoTransporteField, gbcCadastro);
-
-        gbcCadastro.gridx = 0;
-        gbcCadastro.gridy = 3;
-        painelCadastro.add(new JLabel("Peso:"), gbcCadastro);
-        pesoField = new JTextField(20);
-        gbcCadastro.gridx = 1;
-        painelCadastro.add(pesoField, gbcCadastro);
-
-        JButton limparCamposButton = new JButton("Limpar Campos");
-        gbcCadastro.gridx = 0;
-        gbcCadastro.gridy = 4;
-        gbcCadastro.gridwidth = 2;
-        painelCadastro.add(limparCamposButton, gbcCadastro);
-
-        JButton cadastrarTransporteButton = new JButton("Cadastrar Transporte");
-        gbcCadastro.gridy = 5;
-        painelCadastro.add(cadastrarTransporteButton, gbcCadastro);
-
-        JButton sairCadastroButton = new JButton("Sair");
-        gbcCadastro.gridy = 6;
-        painelCadastro.add(sairCadastroButton, gbcCadastro);
-
-        contentPanel.add(painelCadastro, "Cadastrar Novo Transporte");
-
-        JPanel painelPendentes = new JPanel(new BorderLayout());
-        painelPendentes.setBackground(Color.WHITE);
-        JTextArea pendentesArea = new JTextArea();
-        pendentesArea.setEditable(false);
-        painelPendentes.add(new JScrollPane(pendentesArea), BorderLayout.CENTER);
-
-        JButton confirmarButton = new JButton("Confirmar Cadastramento");
-        painelPendentes.add(confirmarButton, BorderLayout.NORTH);
-
-        JButton sairPendentesButton = new JButton("Sair");
-        painelPendentes.add(sairPendentesButton, BorderLayout.SOUTH);
-
-        contentPanel.add(painelPendentes, "Transportes Pendentes");
-
-        JPanel painelCadastrados = new JPanel(new BorderLayout());
-        painelCadastrados.setBackground(Color.WHITE);
-        JTextArea cadastradosArea = new JTextArea();
-        cadastradosArea.setEditable(false);
-        painelCadastrados.add(new JScrollPane(cadastradosArea), BorderLayout.CENTER);
-
-        // Crie o painel para alterar a situação do transporte
-        JPanel painelAlterarSituacao = new JPanel(new GridBagLayout());
-        painelAlterarSituacao.setBackground(Color.WHITE);
-        GridBagConstraints gbcAlterar = new GridBagConstraints();
-        gbcAlterar.insets = new Insets(10, 10, 10, 10);
-        gbcAlterar.fill = GridBagConstraints.HORIZONTAL;
-
-        gbcAlterar.gridx = 0;
-        gbcAlterar.gridy = 0;
-        painelAlterarSituacao.add(new JLabel("Número do Transporte:"), gbcAlterar);
-        JTextField numeroTransporteAlterarField = new JTextField(20);
-        gbcAlterar.gridx = 1;
-        painelAlterarSituacao.add(numeroTransporteAlterarField, gbcAlterar);
-
-        gbcAlterar.gridx = 0;
-        gbcAlterar.gridy = 1;
-        painelAlterarSituacao.add(new JLabel("Nova Situação:"), gbcAlterar);
-        JTextField novaSituacaoField = new JTextField(20);
-        gbcAlterar.gridx = 1;
-        painelAlterarSituacao.add(novaSituacaoField, gbcAlterar);
-
-        JButton alterarSituacaoConfirmarButton = new JButton("Alterar Situação");
-        gbcAlterar.gridx = 0;
-        gbcAlterar.gridy = 2;
-        gbcAlterar.gridwidth = 2;
-        painelAlterarSituacao.add(alterarSituacaoConfirmarButton, gbcAlterar);
-
-        JButton sairAlterarSituacaoButton = new JButton("Sair");
-        gbcAlterar.gridy = 3;
-        painelAlterarSituacao.add(sairAlterarSituacaoButton, gbcAlterar);
-
-        contentPanel.add(painelAlterarSituacao, "Alterar Situacao Transporte");
-
-
-        JPanel botoesCadastradosPanel = new JPanel(new FlowLayout());
-        JButton cancelarButton = new JButton("Cancelar Pedido");
-        JButton confirmarTerminoButton = new JButton("Confirmar Termino");
-        botoesCadastradosPanel.add(cancelarButton);
-        botoesCadastradosPanel.add(confirmarTerminoButton);
-        painelCadastrados.add(botoesCadastradosPanel, BorderLayout.NORTH);
-
-        JButton sairCadastradosButton = new JButton("Sair");
-        painelCadastrados.add(sairCadastradosButton, BorderLayout.SOUTH);
-
-        contentPanel.add(painelCadastrados, "Transportes Cadastrados");
-
-        CadastroDrone cadastroDrone = new CadastroDrone(cardLayout, contentPanel);
-        contentPanel.add(cadastroDrone, "Cadastro de Drone");
-
-        CadastroDroneCargaViva cadastroDroneCargaViva = new CadastroDroneCargaViva(cardLayout, contentPanel);
-        contentPanel.add(cadastroDroneCargaViva, "Cadastro de Drone de Carga Viva");
-
-        CadastroDroneCargaInanimada cadastroDroneCargaInanimada = new CadastroDroneCargaInanimada(cardLayout, contentPanel);
-        contentPanel.add(cadastroDroneCargaInanimada, "Cadastro de Drone de Carga Inanimada");
-
-        cadastrarButton.addActionListener(e -> {
-            updateTitle("TRANSPORTE");
-            cardLayout.show(contentPanel, "Cadastrar Novo Transporte");
-        });
+        // Ações dos botões
         cadastrarDroneButton.addActionListener(e -> {
-            updateTitle("DRONE PESSOAL");
-            cardLayout.show(contentPanel, "Cadastro de Drone");
-        });
-        cadastrarDroneCargaVivaButton.addActionListener(e -> {
-            updateTitle("DRONE DE CARGA VIVA");
-            cardLayout.show(contentPanel, "Cadastro de Drone de Carga Viva");
-        });
-        cadastrarDroneCargaInanimadaButton.addActionListener(e -> {
-            updateTitle("DRONE DE CARGA INANIMADA");
-            cardLayout.show(contentPanel, "Cadastro de Drone de Carga Inanimada");
-        });
-        pendentesButton.addActionListener(e -> {
-            updateTitle("TRANSPORTE");
-            String pendentes = cadastroTransporte.mostrarTransportesPendentes();
-            pendentesArea.setText(pendentes);
-            cardLayout.show(contentPanel, "Transportes Pendentes");
-        });
-        cadastradosButton.addActionListener(e -> {
-            updateTitle("TRANSPORTE");
-            String cadastrados = cadastroTransporte.mostrarTransportes();
-            cadastradosArea.setText(cadastrados);
-            cardLayout.show(contentPanel, "Transportes Cadastrados");
-        });
-        processarButton.addActionListener(e -> {
-            String mensagem = cadastroTransporte.processarTransportesPendentes();
-            JOptionPane.showMessageDialog(this, mensagem);
-        });
+            JFrame droneFrame = new JFrame("Cadastro de Drone");
+            droneFrame.setSize(500, 500);
+            droneFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            droneFrame.setLayout(new GridBagLayout());
+            GridBagConstraints gbc = new GridBagConstraints();
+            gbc.insets = new Insets(10, 10, 10, 10);
+            gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        relatorioGeralButton.addActionListener(e -> mostrarRelatorioGeral());
-
-        sairButton.addActionListener(e -> System.exit(0));
-        sairCadastroButton.addActionListener(e -> {
-            updateTitle("MENU");
-            cardLayout.show(contentPanel, "Main Menu");
-        });
-        sairPendentesButton.addActionListener(e -> {
-            updateTitle("MENU");
-            cardLayout.show(contentPanel, "Main Menu");
-        });
-        sairCadastradosButton.addActionListener(e -> {
-            updateTitle("MENU");
-            cardLayout.show(contentPanel, "Main Menu");
-        });
-        alterarSituacaoButton.addActionListener(e -> {
-            updateTitle("ALTERAR SITUAÇÃO");
-            cardLayout.show(contentPanel, "Alterar Situacao Transporte");
-        });
-
-        alterarSituacaoConfirmarButton.addActionListener(e -> {
-            String numeroStr = numeroTransporteAlterarField.getText();
-            String novaSituacao = novaSituacaoField.getText();
-            if (numeroStr != null && !numeroStr.isEmpty() && novaSituacao != null && !novaSituacao.isEmpty()) {
-                try {
-                    int numero = Integer.parseInt(numeroStr);
-                    Transporte transporte = cadastroTransporte.buscarTransporte(numero);
-                    if (transporte == null) {
-                        JOptionPane.showMessageDialog(this, "Erro: Transporte não encontrado.");
-                    } else if (transporte.getSituacao().equals(Estado.TERMINADO.toString()) || transporte.getSituacao().equals(Estado.CANCELADO.toString())) {
-                        JOptionPane.showMessageDialog(this, "Erro: Não é possível alterar a situação de um transporte terminado ou cancelado.");
-                    } else {
-                        cadastroTransporte.alterarSituacaoTransporte(numero, novaSituacao);
-                        JOptionPane.showMessageDialog(this, "Situação do transporte alterada com sucesso.");
-                    }
-                } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(this, "Erro: Número inválido.");
-                }
-            } else {
-                JOptionPane.showMessageDialog(this, "Erro: Preencha todos os campos.");
+            if(Objects.equals(tipoDroneComboBox.getSelectedItem(), "Pessoal")){
+                gbc.gridx = -1;
+                gbc.gridy = 8;
+                droneFrame.add(new JLabel("Qtd. Máx. Pessoas:"), gbc);
+                JTextField capacidadeDroneField = new JTextField(20);
+                droneFrame.add(capacidadeDroneField, gbc);
+            }
+            if(Objects.equals(tipoDroneComboBox.getSelectedItem(), "Carga Inanimada")){
+                gbc.gridx = 0;
+                gbc.gridy = 8;
+                droneFrame.add(new JLabel("Protegido:"), gbc);
+                JComboBox<String> protegidoComboBox = new JComboBox<>(new String[]{"Sim", "Não"});
+                gbc.gridx = 1;
+                droneFrame.add(protegidoComboBox, gbc);
             }
 
-        });
-        sairAlterarSituacaoButton.addActionListener(e -> {
-            updateTitle("MENU");
-            cardLayout.show(contentPanel, "Main Menu");
-        });
+            // Código do Drone
+            gbc.gridx = 0;
+            gbc.gridy = 0;
+            droneFrame.add(new JLabel("Código do Drone:"), gbc);
+            JTextField codigoDroneField = new JTextField(20);
+            gbc.gridx = 1;
+            droneFrame.add(codigoDroneField, gbc);
 
+            // Custo Fixo do Drone
+            gbc.gridx = 0;
+            gbc.gridy = 1;
+            droneFrame.add(new JLabel("Custo Fixo:"), gbc);
+            JTextField custoFixoDroneField = new JTextField(20);
+            gbc.gridx = 1;
+            droneFrame.add(custoFixoDroneField, gbc);
+
+            // Autonomia do Drone
+            gbc.gridx = 0;
+            gbc.gridy = 2;
+            droneFrame.add(new JLabel("Autonomia:"), gbc);
+            JTextField autonomiaDroneField = new JTextField(20);
+            gbc.gridx = 1;
+            droneFrame.add(autonomiaDroneField, gbc);
+
+            // Peso Máximo do Drone
+            gbc.gridx = 0;
+            gbc.gridy = 3;
+            droneFrame.add(new JLabel("Peso Máximo:"), gbc);
+            JTextField pesoMaximoDroneField = new JTextField(20);
+            gbc.gridx = 1;
+            droneFrame.add(pesoMaximoDroneField, gbc);
+
+            // Climatizado
+            gbc.gridx = 0;
+            gbc.gridy = 4;
+            droneFrame.add(new JLabel("Climatizado:"), gbc);
+            JComboBox<String> climatizadoComboBox = new JComboBox<>(new String[]{"Sim", "Não"});
+            gbc.gridx = 1;
+            droneFrame.add(climatizadoComboBox, gbc);
+
+            // Botão para Cadastrar Drone
+            JButton cadastrarDroneButtonInner = new JButton("Cadastrar Drone");
+            gbc.gridx = 0;
+            gbc.gridy = 9;
+            gbc.gridwidth = 2;
+            droneFrame.add(cadastrarDroneButtonInner, gbc);
+
+
+            droneFrame.setVisible(true);
+
+            cadastrarDroneButtonInner.addActionListener(event -> {
+                String codigo = codigoDroneField.getText();
+                String custoFixo = custoFixoDroneField.getText();
+                String autonomia = autonomiaDroneField.getText();
+                String pesoMaximo = pesoMaximoDroneField.getText();
+                String climatizado = climatizadoComboBox.getSelectedItem().toString();
+                String tipoDrone = tipoDroneComboBox.getSelectedItem().toString();
+
+                if (!codigo.isEmpty() && !custoFixo.isEmpty() && !autonomia.isEmpty() && !pesoMaximo.isEmpty() && !climatizado.isEmpty()) {
+                    String mensagem;
+                    if (tipoDrone.equals("Pessoal")) {
+                        DronePessoal dronePessoal = new DronePessoal(codigo, Double.parseDouble(custoFixo), Double.parseDouble(autonomia), Double.parseDouble(pesoMaximo), climatizado.equals("Sim"), 0);
+                        mensagem = cadastroDrone.cadastrarDrone(dronePessoal);
+                    } else if (tipoDrone.equals("Carga Viva")) {
+                        DroneCargaViva droneCargaViva = new DroneCargaViva(codigo, Double.parseDouble(custoFixo), Double.parseDouble(autonomia), Double.parseDouble(pesoMaximo), climatizado.equals("Sim"));
+                        mensagem = cadastroDrone.cadastrarDrone(droneCargaViva);
+                    } else {
+                        DroneCargaInanimada droneCargaInanimada = new DroneCargaInanimada(codigo, Double.parseDouble(custoFixo), Double.parseDouble(autonomia), Double.parseDouble(pesoMaximo), climatizado.equals("Sim"), false);
+                        mensagem = cadastroDrone.cadastrarDrone(droneCargaInanimada);
+                    }
+                    JOptionPane.showMessageDialog(droneFrame, mensagem);
+                } else {
+                    JOptionPane.showMessageDialog(droneFrame, "Por favor, preencha todos os campos.");
+                }
+            });
+
+            droneFrame.setVisible(true);
+        });
 
         cadastrarTransporteButton.addActionListener(e -> {
-            String nomeCliente = nomeClienteField.getText();
-            String numero = numeroTransporteField.getText();
-            String descricao = descricaoTransporteField.getText();
-            String peso = pesoField.getText();
-            String mensagem = cadastroTransporte.cadastrarTransporte(nomeCliente, numero, descricao, peso);
-            JOptionPane.showMessageDialog(this, mensagem);
-            if (mensagem.equals("Transporte cadastrado com sucesso!")) {
-                limparCampos();
-            }
-        });
+            JFrame transporteFrame = new JFrame("Cadastro de Transporte");
+            transporteFrame.setSize(500, 600);
+            transporteFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            transporteFrame.setLayout(new GridBagLayout());
+            GridBagConstraints gbc = new GridBagConstraints();
+            gbc.insets = new Insets(10, 10, 10, 10);
+            gbc.fill = GridBagConstraints.HORIZONTAL;
 
+            // Número do Transporte
+            gbc.gridx = 0;
+            gbc.gridy = 0;
+            transporteFrame.add(new JLabel("Número do Transporte:"), gbc);
+            JTextField numeroTransporteField = new JTextField(20);
+            gbc.gridx = 1;
+            transporteFrame.add(numeroTransporteField, gbc);
 
+            // Nome do Cliente
+            gbc.gridx = 0;
+            gbc.gridy = 1;
+            transporteFrame.add(new JLabel("Nome do Cliente:"), gbc);
+            JTextField nomeClienteField = new JTextField(20);
+            gbc.gridx = 1;
+            transporteFrame.add(nomeClienteField, gbc);
 
-        limparCamposButton.addActionListener(e -> limparCampos());
-        confirmarButton.addActionListener(e -> {
-            String numeroStr = JOptionPane.showInputDialog(this, "Digite o número do transporte a confirmar:");
-            if (numeroStr != null) {
-                try {
-                    int numero = Integer.parseInt(numeroStr);
-                    cadastroTransporte.confirmarTransporte(numero);
-                    String pendentes = cadastroTransporte.mostrarTransportesPendentes();
-                    pendentesArea.setText(pendentes);
-                    String cadastrados = cadastroTransporte.mostrarTransportes();
-                    cadastradosArea.setText(cadastrados);
-                } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(this, "Número inválido.");
+            // Descrição do Transporte
+            gbc.gridx = 0;
+            gbc.gridy = 2;
+            transporteFrame.add(new JLabel("Descrição do Transporte:"), gbc);
+            JTextField descricaoTransporteField = new JTextField(20);
+            gbc.gridx = 1;
+            transporteFrame.add(descricaoTransporteField, gbc);
+
+            // Peso do Transporte
+            gbc.gridx = 0;
+            gbc.gridy = 3;
+            transporteFrame.add(new JLabel("Peso:"), gbc);
+            JTextField pesoTransporteField = new JTextField(20);
+            gbc.gridx = 1;
+            transporteFrame.add(pesoTransporteField, gbc);
+
+            // Latitude Origem
+            gbc.gridx = 0;
+            gbc.gridy = 4;
+            transporteFrame.add(new JLabel("Latitude Origem:"), gbc);
+            JTextField latitudeOrigemField = new JTextField(20);
+            gbc.gridx = 1;
+            transporteFrame.add(latitudeOrigemField, gbc);
+
+            // Latitude Destino
+            gbc.gridx = 0;
+            gbc.gridy = 5;
+            transporteFrame.add(new JLabel("Latitude Destino:"), gbc);
+            JTextField latitudeDestinoField = new JTextField(20);
+            gbc.gridx = 1;
+            transporteFrame.add(latitudeDestinoField, gbc);
+
+            // Longitude Origem
+            gbc.gridx = 0;
+            gbc.gridy = 6;
+            transporteFrame.add(new JLabel("Longitude Origem:"), gbc);
+            JTextField longitudeOrigemField = new JTextField(20);
+            gbc.gridx = 1;
+            transporteFrame.add(longitudeOrigemField, gbc);
+
+            // Longitude Destino
+            gbc.gridx = 0;
+            gbc.gridy = 7;
+            transporteFrame.add(new JLabel("Longitude Destino:"), gbc);
+            JTextField longitudeDestinoField = new JTextField(20);
+            gbc.gridx = 1;
+            transporteFrame.add(longitudeDestinoField, gbc);
+
+            // Situação
+            gbc.gridx = 0;
+            gbc.gridy = 8;
+            transporteFrame.add(new JLabel("Situação:"), gbc);
+            JComboBox<String> situacaoComboBox = new JComboBox<>(new String[]{"PENDENTE", "EM ANDAMENTO", "TERMINADO", "CANCELADO"});
+            gbc.gridx = 1;
+            transporteFrame.add(situacaoComboBox, gbc);
+
+            // Tipo de Transporte
+            gbc.gridx = 0;
+            gbc.gridy = 9;
+            transporteFrame.add(new JLabel("Tipo de Transporte:"), gbc);
+            JComboBox<String> tipoTransportComboBox = new JComboBox<>(new String[]{"Pessoal", "Carga Viva", "Carga Inanimada"});
+            gbc.gridx = 1;
+            transporteFrame.add(tipoTransportComboBox, gbc);
+
+            // Botão para Cadastrar Transporte
+            JButton cadastrarTransporteButtonInner = new JButton("Cadastrar Transporte");
+            gbc.gridx = 0;
+            gbc.gridy = 10;
+            gbc.gridwidth = 2;
+            transporteFrame.add(cadastrarTransporteButtonInner, gbc);
+
+            cadastrarTransporteButtonInner.addActionListener(event -> {
+                String numero = numeroTransporteField.getText();
+                String nomeCliente = nomeClienteField.getText();
+                String descricao = descricaoTransporteField.getText();
+                String peso = pesoTransporteField.getText();
+                String latitudeOrigem = latitudeOrigemField.getText();
+                String latitudeDestino = latitudeDestinoField.getText();
+                String longitudeOrigem = longitudeOrigemField.getText();
+                String longitudeDestino = longitudeDestinoField.getText();
+                String situacao = situacaoComboBox.getSelectedItem().toString();
+                String tipoTransporte = tipoTransporteComboBox.getSelectedItem().toString();
+
+                if (!numero.isEmpty() && !nomeCliente.isEmpty() && !descricao.isEmpty() && !peso.isEmpty() && !latitudeOrigem.isEmpty() && !latitudeDestino.isEmpty() && !longitudeOrigem.isEmpty() && !longitudeDestino.isEmpty() && !situacao.isEmpty()) {
+                    String mensagem;
+                    if (tipoTransporte.equals("Pessoal")) {
+                        TransportePessoal transportePessoal = new TransportePessoal(Integer.parseInt(numero), nomeCliente, descricao, Double.parseDouble(peso), Double.parseDouble(latitudeOrigem), Double.parseDouble(latitudeDestino), Double.parseDouble(longitudeOrigem), Double.parseDouble(longitudeDestino), Estado.valueOf(situacao), 0);
+                        mensagem = cadastroTransporte.cadastrarTransporte(transportePessoal);
+                    } else if (tipoTransporte.equals("Carga Viva")) {
+                        TransporteCargaViva transporteCargaViva = new TransporteCargaViva(Integer.parseInt(numero), nomeCliente, descricao, Double.parseDouble(peso), Double.parseDouble(latitudeOrigem), Double.parseDouble(latitudeDestino), Double.parseDouble(longitudeOrigem), Double.parseDouble(longitudeDestino), Estado.valueOf(situacao), 0, 0);
+                        mensagem = cadastroTransporte.cadastrarTransporte(transporteCargaViva);
+                    } else {
+                        TransporteCargaInanimada transporteCargaInanimada = new TransporteCargaInanimada(Integer.parseInt(numero), nomeCliente, descricao, Double.parseDouble(peso), Double.parseDouble(latitudeOrigem), Double.parseDouble(latitudeDestino), Double.parseDouble(longitudeOrigem), Double.parseDouble(longitudeDestino), Estado.valueOf(situacao), false);
+                        mensagem = cadastroTransporte.cadastrarTransporte(transporteCargaInanimada);
+                    }
+                    JOptionPane.showMessageDialog(transporteFrame, mensagem);
+                } else {
+                    JOptionPane.showMessageDialog(transporteFrame, "Por favor, preencha todos os campos.");
                 }
+            });
+
+            transporteFrame.setVisible(true);
+        });
+
+        processarTransportesButton.addActionListener(e -> {
+            JOptionPane.showMessageDialog(this, cadastroTransporte.processarTransportesPendentes());
+        });
+
+        relatorioGeralButton.addActionListener(e -> {
+            StringBuilder relatorio = new StringBuilder();
+
+            // Adiciona informações dos drones
+            relatorio.append("Relatório de Drones:\n");
+            for (Drone drone : cadastroDrone.getDronesCadastrados()) {
+                relatorio.append(drone.toString()).append("\n");
+            }
+
+            // Adiciona informações dos transportes
+            relatorio.append("\nRelatório de Transportes:\n");
+            for (Transporte transporte : cadastroTransporte.getTransportesCadastrados()) {
+                relatorio.append(transporte.toString()).append("\n");
+            }
+
+            // Verifica se há dados para exibir
+            if (relatorio.length() == 0) {
+                JOptionPane.showMessageDialog(this, "Não há dados cadastrados.");
+            } else {
+                JOptionPane.showMessageDialog(this, relatorio.toString());
             }
         });
 
-        cancelarButton.addActionListener(e -> {
-            String numeroStr = JOptionPane.showInputDialog(this, "Digite o número do transporte a cancelar:");
-            if (numeroStr != null) {
-                try {
-                    int numero = Integer.parseInt(numeroStr);
-                    cadastroTransporte.cancelarTransporte(numero);
-                    String cadastrados = cadastroTransporte.mostrarTransportes();
-                    cadastradosArea.setText(cadastrados);
-                    JOptionPane.showMessageDialog(this, "Transporte cancelado.");
-                } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(this, "Número inválido.");
+        mostrarTransportesButton.addActionListener(e -> {
+            String transportes = cadastroTransporte.mostrarTransportes();
+            if (transportes.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Não há transportes cadastrados.");
+            } else {
+                JOptionPane.showMessageDialog(this, transportes);
+            }
+        });
+
+        alterarSituacaoButton.addActionListener(e -> {
+            String numero = JOptionPane.showInputDialog(this, "Digite o número do transporte:");
+            if (numero != null && !numero.trim().isEmpty()) {
+                Transporte transporte = cadastroTransporte.buscarTransporte(Integer.parseInt(numero));
+                if (transporte == null) {
+                    JOptionPane.showMessageDialog(this, "Erro: Transporte não encontrado.");
+                } else if (transporte.getSituacao() == Estado.TERMINADO || transporte.getSituacao() == Estado.CANCELADO) {
+                    JOptionPane.showMessageDialog(this, "Erro: Transporte não pode ser alterado.");
+                } else {
+                    String novaSituacao = JOptionPane.showInputDialog(this, "Digite a nova situação:");
+                    cadastroTransporte.alterarSituacaoTransporte(Integer.parseInt(numero), novaSituacao);
+                    JOptionPane.showMessageDialog(this, "Situação alterada com sucesso!");
                 }
+            } else {
+                JOptionPane.showMessageDialog(this, "Número do transporte inválido.");
             }
         });
 
-        confirmarTerminoButton.addActionListener(e -> {
-            String numeroStr = JOptionPane.showInputDialog(this, "Digite o número do transporte a confirmar término:");
-            if (numeroStr != null) {
-                try {
-                    int numero = Integer.parseInt(numeroStr);
-                    cadastroTransporte.terminarTransporte(numero);
-                    String cadastrados = cadastroTransporte.mostrarTransportes();
-                    cadastradosArea.setText(cadastrados);
-                    JOptionPane.showMessageDialog(this, "Transporte finalizado.");
-                } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(this, "Número inválido.");
-                }
-            }
+//        leituraSimulacaoButton.addActionListener(e -> {
+//            String nomeArquivo = JOptionPane.showInputDialog(this, "Digite o nome do arquivo de simulação (sem extensão):");
+//            if (nomeArquivo != null && !nomeArquivo.trim().isEmpty()) {
+//                String mensagem = leituraSimulacao(nomeArquivo);
+//                JOptionPane.showMessageDialog(this, mensagem);
+//            } else {
+//                JOptionPane.showMessageDialog(this, "Nome do arquivo inválido.");
+//            }
+//        });
+//
+//        salvarDadosButton.addActionListener(e -> {
+//            String nomeArquivo = JOptionPane.showInputDialog(this, "Digite o nome do arquivo para salvar os dados (sem extensão):");
+//            if (nomeArquivo != null && !nomeArquivo.trim().isEmpty()) {
+//                String mensagem = salvarDados(nomeArquivo);
+//                JOptionPane.showMessageDialog(this, mensagem);
+//            } else {
+//                JOptionPane.showMessageDialog(this, "Nome do arquivo inválido.");
+//            }
+//        });
+//
+//        carregarDadosButton.addActionListener(e -> {
+//            String nomeArquivo = JOptionPane.showInputDialog(this, "Digite o nome do arquivo para carregar os dados (sem extensão):");
+//            if (nomeArquivo != null && !nomeArquivo.trim().isEmpty()) {
+//                String mensagem = carregarDados(nomeArquivo);
+//                JOptionPane.showMessageDialog(this, mensagem);
+//            } else {
+//                JOptionPane.showMessageDialog(this, "Nome do arquivo inválido.");
+//            }
+//        });
+
+        sairButton.addActionListener(e -> {
+            System.exit(0);
         });
     }
 
-    private void limparCampos() {
-        nomeClienteField.setText("");
-        numeroTransporteField.setText("");
-        descricaoTransporteField.setText("");
-        pesoField.setText("");
+    private void showCadastroTransporte() {
     }
 
-    private void updateTitle(String title) {
-        tituloLabel.setText(title);
-    }
-
-    private void mostrarRelatorioGeral() {
-        StringBuilder relatorio = new StringBuilder();
-        List<Drone> drones = cadastroTransporte.getDronesDisponiveis();
-        List<Transporte> transportes = cadastroTransporte.getTransportesCadastrados();
-
-        if (drones.isEmpty() && transportes.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Não há dados cadastrados.");
-            return;
-        }
-
-        relatorio.append("Drones Disponíveis:\n");
-        for (Drone drone : drones) {
-            relatorio.append(drone.toString()).append("\n");
-        }
-
-        relatorio.append("\nTransportes Cadastrados:\n");
-        for (Transporte transporte : transportes) {
-            relatorio.append(transporte.toString()).append("\n");
-        }
-
-        JOptionPane.showMessageDialog(this, relatorio.toString());
-    }
 }

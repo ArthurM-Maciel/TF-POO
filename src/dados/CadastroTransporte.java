@@ -5,13 +5,12 @@ import java.util.List;
 import java.util.Queue;
 
 public class CadastroTransporte {
-    private List<Transporte> transportesCadastrados;
+    private ArrayList<Transporte> transportesCadastrados;
     private Queue<Transporte> transportesPendentes;
-    private List<Drone> dronesDisponiveis;
+
 
     public CadastroTransporte() {
         transportesPendentes = new LinkedList<>();
-        dronesDisponiveis = new ArrayList<>();
         transportesCadastrados = new ArrayList<>();
     }
 
@@ -26,9 +25,9 @@ public class CadastroTransporte {
             Transporte transporte = transportesPendentes.poll();
             boolean alocado = false;
 
-            for (Drone drone : dronesDisponiveis) {
-                if (drone.podeAtender(transporte)) {
-                    transporte.setSituacao(Estado.ALOCADO);
+            for (Transporte transporte1 : transportesCadastrados) {
+                if (transporte1.podeAtender(transporte1)) {
+                    transporte1.setSituacao(Estado.ALOCADO);
                     alocado = true;
                     break;
                 }
@@ -43,21 +42,17 @@ public class CadastroTransporte {
         return "Processamento de transportes pendentes concluído.";
     }
 
-    public String cadastrarTransporte(String nomeCliente, String numero, String descricao, String peso) {
-        if (nomeCliente == null || nomeCliente.isEmpty() || !nomeCliente.matches("[a-zA-Z\\s]+")) {
-            return "Erro: Nome do cliente inválido.";
+    public String cadastrarTransporte(Transporte transporte) {
+        for (Transporte t : transportesCadastrados) {
+            if (t.getNumero() == transporte.getNumero()) {
+                return "Erro: Transporte com o número indicado já existe.";
+            }
         }
 
-        try {
-            int numeroInt = Integer.parseInt(numero);
-            double pesoDouble = Double.parseDouble(peso);
-            Transporte transporte = new TiposDeTransporte(numeroInt, nomeCliente, descricao, pesoDouble, 0, 0, 0, 0, Estado.PENDENTE);
-            transportesPendentes.add(transporte);
-            return "Transporte cadastrado com sucesso!";
-        } catch (NumberFormatException e) {
-            return "Erro: Número ou peso inválido.";
-        }
+        transportesPendentes.add(transporte);
+        return "Transporte cadastrado com sucesso!";
     }
+
     public String mostrarTransportesPendentes() {
         if (transportesPendentes.isEmpty()) {
             return "Não há transportes pendentes.";
@@ -106,9 +101,6 @@ public class CadastroTransporte {
             }
         }
     }
-    public List<Drone> getDronesDisponiveis() {
-        return new ArrayList<>(dronesDisponiveis);
-    }
 
     public List<Transporte> getTransportesCadastrados() {
         return new ArrayList<>(transportesCadastrados);
@@ -137,20 +129,4 @@ public class CadastroTransporte {
         }
     }
 
-
-
-    private class TransporteConcreto extends Transporte {
-        public TransporteConcreto(int numero, String nomeCliente, String descricao, double peso, double latitudeOrigem, double latitudeDestino, double longitudeOrigem, double longitudeDestino, Estado situacao) {
-            super(numero, nomeCliente, descricao, peso, latitudeOrigem, latitudeDestino, longitudeOrigem, longitudeDestino, situacao);
-        }
-
-        @Override
-        public double calculaCusto() {
-            return 0;
-        }
-
-        // In CadastroTransporte.java
-
-
-    }
 }

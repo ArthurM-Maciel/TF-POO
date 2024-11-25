@@ -3,7 +3,7 @@ package dados;
 public class DroneCargaInanimada extends Drone {
     private boolean protegido;
 
-    public DroneCargaInanimada(String codigo, double custoFixo, double autonomia, double pesoMaximo, boolean protegido) {
+    public DroneCargaInanimada(String codigo, double custoFixo, double autonomia, double pesoMaximo,boolean climatizado, boolean protegido) {
         super(codigo, custoFixo, autonomia, pesoMaximo, false);
         this.protegido = protegido;
     }

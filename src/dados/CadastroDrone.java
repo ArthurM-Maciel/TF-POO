@@ -1,98 +1,35 @@
 package dados;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-public class CadastroDrone extends JPanel {
-    private JTextField codigoField;
-    private JTextField custoField;
-    private JTextField pesoField;
-    private JTextField quantidadeMaximaField;
-    private JButton salvarButton;
-    private JButton limparCamposButton;
-    private JButton sairButton;
 
-    public CadastroDrone(CardLayout cardLayout, JPanel contentPanel) {
-        setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 10, 10, 10);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
+import java.util.ArrayList;
+import java.util.List;
 
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        add(new JLabel("Código:"), gbc);
-        codigoField = new JTextField(20);
-        gbc.gridx = 1;
-        add(codigoField, gbc);
+public class CadastroDrone {
+    private ArrayList<Drone> dronesDisponiveis;
 
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        add(new JLabel("Custo:"), gbc);
-        custoField = new JTextField(20);
-        gbc.gridx = 1;
-        add(custoField, gbc);
-
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        add(new JLabel("Peso:"), gbc);
-        pesoField = new JTextField(20);
-        gbc.gridx = 1;
-        add(pesoField, gbc);
-
-        gbc.gridx = 0;
-        gbc.gridy = 3;
-        add(new JLabel("Quantidade Máxima de Pessoas:"), gbc);
-        quantidadeMaximaField = new JTextField(20);
-        gbc.gridx = 1;
-        add(quantidadeMaximaField, gbc);
-
-        salvarButton = new JButton("Salvar");
-        gbc.gridx = 0;
-        gbc.gridy = 4;
-        gbc.gridwidth = 2;
-        add(salvarButton, gbc);
-
-        salvarButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String codigo = codigoField.getText();
-                String custo = custoField.getText();
-                String peso = pesoField.getText();
-                String quantidadeMaxima = quantidadeMaximaField.getText();
-
-                // Logic to save drone data
-                JOptionPane.showMessageDialog(CadastroDrone.this, "Drone cadastrado com sucesso!");
-            }
-        });
-
-        limparCamposButton = new JButton("Limpar Campos");
-        gbc.gridy = 5;
-        add(limparCamposButton, gbc);
-
-        limparCamposButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                limparCampos();
-            }
-        });
-
-        sairButton = new JButton("Sair");
-        gbc.gridy = 6;
-        add(sairButton, gbc);
-
-        sairButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                cardLayout.show(contentPanel, "Main Menu");
-            }
-        });
+    public CadastroDrone() {
+        this.dronesDisponiveis = new ArrayList<>();
     }
 
-    private void limparCampos() {
-        codigoField.setText("");
-        custoField.setText("");
-        pesoField.setText("");
-        quantidadeMaximaField.setText("");
+    // Método para cadastrar um drone
+    public String cadastrarDrone(Drone drone) {
+        // Verifica se o drone já foi cadastrado
+        for (Drone d : dronesDisponiveis) {
+            if (d.getCodigo().equals(drone.getCodigo())) {
+                return "Erro: Drone com esse código já cadastrado.";
+            }
+        }
+        // Adiciona o drone à lista de drones
+        dronesDisponiveis.add(drone);
+        return "Drone cadastrado com sucesso!";
+    }
+
+    // Retorna a lista de drones disponíveis
+    public List<Drone> getDronesDisponiveis() {
+        return dronesDisponiveis;
+    }
+
+    public ArrayList<Drone> getDronesCadastrados() {
+        return dronesDisponiveis;
     }
 }
