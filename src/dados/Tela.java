@@ -503,16 +503,14 @@ public class Tela extends JFrame {
                     String codigo = dados[1];
                     double custoFixo = Double.parseDouble(dados[2]);
                     double autonomia = Double.parseDouble(dados[3]);
-                    double pesoMaximo = Double.parseDouble(dados[4]);
-                    boolean climatizado = Boolean.parseBoolean(dados[5]);
 
                     Drone drone;
                     if (tipo == 1) {
                         drone = new DronePessoal(codigo, custoFixo, autonomia, Integer.parseInt(dados[4]));
                     } else if (tipo == 2) {
-                        drone = new DroneCargaInanimada(codigo, custoFixo, autonomia, pesoMaximo, Boolean.parseBoolean(dados[5]));
+                        drone = new DroneCargaInanimada(codigo, custoFixo, autonomia, Double.parseDouble(dados[4]), Boolean.parseBoolean(dados[5]));
                     } else {
-                        drone = new DroneCargaViva(codigo, custoFixo, autonomia, pesoMaximo, climatizado);
+                        drone = new DroneCargaViva(codigo, custoFixo, autonomia, Double.parseDouble(dados[4]), Boolean.parseBoolean(dados[5]));
                     }
                     mensagem.append(cadastroTransporte.cadastrarDrone(drone)).append("\n");
                 } catch (Exception e) {
