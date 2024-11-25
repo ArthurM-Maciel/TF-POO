@@ -10,8 +10,8 @@ public class CadastroTransporte {
 
 
     public CadastroTransporte() {
-        transportesPendentes = new LinkedList<>();
         transportesCadastrados = new ArrayList<>();
+        transportesPendentes = new LinkedList<>();
     }
 
     public String processarTransportesPendentes() {
@@ -48,8 +48,7 @@ public class CadastroTransporte {
                 return "Erro: Transporte com o número indicado já existe.";
             }
         }
-
-        transportesPendentes.add(transporte);
+        transportesCadastrados.add(transporte);
         return "Transporte cadastrado com sucesso!";
     }
 
@@ -103,10 +102,9 @@ public class CadastroTransporte {
     }
 
     public List<Transporte> getTransportesCadastrados() {
-        return new ArrayList<>(transportesCadastrados);
+        return transportesCadastrados;
     }
 
-    // In CadastroTransporte.java
 
     public Transporte buscarTransporte(int numero) {
         for (Transporte t : transportesCadastrados) {

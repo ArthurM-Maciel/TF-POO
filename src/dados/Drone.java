@@ -1,5 +1,5 @@
 package dados;
-public abstract class Drone {
+public abstract class Drone implements Comparable<Drone> {
     private String codigo;
     private double custoFixo;
     private double autonomia;
@@ -28,7 +28,11 @@ public abstract class Drone {
         return "Código: " + codigo + "\nCusto fixo: " + custoFixo + "\nAutonomia: " + autonomia + "\nPeso máximo: " + pesoMaximo + "\nClimatizado: " + climatizado;
     }
 
-    public Object getCodigo() {
+    public String getCodigo() {
         return codigo;
+    }
+
+    public int compareTo(Drone drone) {
+        return this.codigo.compareTo(drone.getCodigo());
     }
 }

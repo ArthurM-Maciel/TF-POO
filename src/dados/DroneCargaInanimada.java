@@ -20,4 +20,5 @@ public class DroneCargaInanimada extends Drone {
     public boolean podeAtender() {
         return true;
     }
+
 }

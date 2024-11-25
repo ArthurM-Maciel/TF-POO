@@ -9,4 +9,5 @@ public class DroneCargaViva extends Drone {
     public double calculaCustoVariado() {
         return isClimatizado() ? 20.0 : 10.0;
     }
+
 }

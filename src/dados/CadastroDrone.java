@@ -11,20 +11,21 @@ public class CadastroDrone {
         this.dronesDisponiveis = new ArrayList<>();
     }
 
-    // Método para cadastrar um drone
     public String cadastrarDrone(Drone drone) {
-        // Verifica se o drone já foi cadastrado
         for (Drone d : dronesDisponiveis) {
             if (d.getCodigo().equals(drone.getCodigo())) {
                 return "Erro: Drone com esse código já cadastrado.";
             }
         }
-        // Adiciona o drone à lista de drones
-        dronesDisponiveis.add(drone);
+
+        int index = 0;
+        while (index < dronesDisponiveis.size() && dronesDisponiveis.get(index).getCodigo().compareTo(drone.getCodigo()) < 0) {
+            index++;
+        }
+        dronesDisponiveis.add(index, drone);
         return "Drone cadastrado com sucesso!";
     }
 
-    // Retorna a lista de drones disponíveis
     public List<Drone> getDronesDisponiveis() {
         return dronesDisponiveis;
     }

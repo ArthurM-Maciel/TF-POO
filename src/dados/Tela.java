@@ -5,27 +5,8 @@ import java.awt.*;
 import java.util.Objects;
 
 public class Tela extends JFrame {
-    private CadastroTransporte cadastroTransporte;
-    private CadastroDrone cadastroDrone;
-    private CardLayout cardLayout;
-    private JPanel contentPanel;
-    private JLabel tituloLabel;
-
-    // Campos para cadastro de Drone
-    private JTextField codigoDroneField;
-    private JTextField capacidadeDroneField;
-    private JTextField custoFixoDroneField;
-    private JComboBox<String> tipoDroneComboBox;
-    private JTextField autonomiaDroneField;
-    private JTextField pesoMaximoDroneField;
-    private JComboBox<String> climatizadoComboBox;
-    private JComboBox<String> protegidoComboBox;
-
-
-    // Campos para cadastro de Transporte
-    private JTextField numeroTransporteField;
-    private JTextField descricaoTransporteField;
-    private JTextField pesoTransporteField;
+    private final CadastroTransporte cadastroTransporte;
+    private final CadastroDrone cadastroDrone;
 
     public Tela() {
         setTitle("ACMEAirDrones - Sistema de Gerenciamento");
@@ -36,13 +17,13 @@ public class Tela extends JFrame {
         cadastroTransporte = new CadastroTransporte();
         cadastroDrone = new CadastroDrone();
 
-        tituloLabel = new JLabel("MENU PRINCIPAL", SwingConstants.CENTER);
+        JLabel tituloLabel = new JLabel("MENU PRINCIPAL", SwingConstants.CENTER);
         tituloLabel.setFont(new Font("Arial", Font.BOLD, 24));
         tituloLabel.setForeground(Color.BLUE);
         add(tituloLabel, BorderLayout.NORTH);
 
-        cardLayout = new CardLayout();
-        contentPanel = new JPanel(cardLayout);
+        CardLayout cardLayout = new CardLayout();
+        JPanel contentPanel = new JPanel(cardLayout);
         contentPanel.setBackground(Color.WHITE);
         add(contentPanel, BorderLayout.CENTER);
 
@@ -59,7 +40,7 @@ public class Tela extends JFrame {
         gbcMenu.gridy = -1;
         menuPanel.add(cadastrarDroneButton, gbcMenu);
 
-        JComboBox tipoDroneComboBox = new JComboBox(new String[]{"Pessoal", "Carga Viva", "Carga Inanimada"});
+        JComboBox<String> tipoDroneComboBox = new JComboBox<>(new String[]{"Pessoal", "Carga Viva", "Carga Inanimada"});
         gbcMenu.gridx = 1;
         gbcMenu.gridy = -1;
         menuPanel.add(tipoDroneComboBox, gbcMenu);
@@ -69,7 +50,7 @@ public class Tela extends JFrame {
         gbcMenu.gridx = 0;
         menuPanel.add(cadastrarTransporteButton, gbcMenu);
 
-        JComboBox tipoTransporteComboBox = new JComboBox(new String[]{"Pessoal", "Carga Viva", "Carga Inanimada"});
+        JComboBox<String> tipoTransporteComboBox = new JComboBox<>(new String[]{"Pessoal", "Carga Viva", "Carga Inanimada"});
         gbcMenu.gridx = 1;
         gbcMenu.gridy = 1;
         menuPanel.add(tipoTransporteComboBox, gbcMenu);
@@ -111,7 +92,7 @@ public class Tela extends JFrame {
         add(menuPanel, BorderLayout.CENTER);
 
         // Ações dos botões
-        cadastrarDroneButton.addActionListener(e -> {
+        cadastrarDroneButton.addActionListener(_ -> {
             JFrame droneFrame = new JFrame("Cadastro de Drone");
             droneFrame.setSize(500, 500);
             droneFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -183,16 +164,31 @@ public class Tela extends JFrame {
             gbc.gridwidth = 2;
             droneFrame.add(cadastrarDroneButtonInner, gbc);
 
+            // Limpar campos
+            JButton limparCamposButton = new JButton("Limpar Campos");
+            gbc.gridx = 0;
+            gbc.gridy = 10;
+            gbc.gridwidth = 2;
+            droneFrame.add(limparCamposButton, gbc);
+
+            limparCamposButton.addActionListener(_ -> {
+                codigoDroneField.setText("");
+                custoFixoDroneField.setText("");
+                autonomiaDroneField.setText("");
+                pesoMaximoDroneField.setText("");
+                climatizadoComboBox.setSelectedIndex(0);
+                tipoDroneComboBox.setSelectedIndex(0);
+            });
 
             droneFrame.setVisible(true);
 
-            cadastrarDroneButtonInner.addActionListener(event -> {
+            cadastrarDroneButtonInner.addActionListener(_ -> {
                 String codigo = codigoDroneField.getText();
                 String custoFixo = custoFixoDroneField.getText();
                 String autonomia = autonomiaDroneField.getText();
                 String pesoMaximo = pesoMaximoDroneField.getText();
-                String climatizado = climatizadoComboBox.getSelectedItem().toString();
-                String tipoDrone = tipoDroneComboBox.getSelectedItem().toString();
+                String climatizado = Objects.requireNonNull(climatizadoComboBox.getSelectedItem()).toString();
+                String tipoDrone = Objects.requireNonNull(tipoDroneComboBox.getSelectedItem()).toString();
 
                 if (!codigo.isEmpty() && !custoFixo.isEmpty() && !autonomia.isEmpty() && !pesoMaximo.isEmpty() && !climatizado.isEmpty()) {
                     String mensagem;
@@ -215,7 +211,7 @@ public class Tela extends JFrame {
             droneFrame.setVisible(true);
         });
 
-        cadastrarTransporteButton.addActionListener(e -> {
+        cadastrarTransporteButton.addActionListener(_ -> {
             JFrame transporteFrame = new JFrame("Cadastro de Transporte");
             transporteFrame.setSize(500, 600);
             transporteFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -223,6 +219,38 @@ public class Tela extends JFrame {
             GridBagConstraints gbc = new GridBagConstraints();
             gbc.insets = new Insets(10, 10, 10, 10);
             gbc.fill = GridBagConstraints.HORIZONTAL;
+
+            if(Objects.equals(tipoTransporteComboBox.getSelectedItem(), "Pessoal")){
+                gbc.gridx = -1;
+                gbc.gridy = 9;
+                transporteFrame.add(new JLabel("Qtd. Máx. Pessoas:"), gbc);
+                JTextField capacidadeTransporteField = new JTextField(20);
+                transporteFrame.add(capacidadeTransporteField, gbc);
+            }
+            if(Objects.equals(tipoTransporteComboBox.getSelectedItem(), "Carga Inanimada")){
+                gbc.gridx = 0;
+                gbc.gridy = 9;
+                transporteFrame.add(new JLabel("Carga Perigosa:"), gbc);
+                JComboBox<String> protegidoComboBox = new JComboBox<>(new String[]{"Sim", "Não"});
+                gbc.gridx = 1;
+                transporteFrame.add(protegidoComboBox, gbc);
+            }
+            if(Objects.equals(tipoTransporteComboBox.getSelectedItem(), "Carga Viva")){
+                gbc.gridx = 0;
+                gbc.gridy = 9;
+                transporteFrame.add(new JLabel("Temperatura mínima:"), gbc);
+                JTextField temperaturaMinimaField = new JTextField(20);
+                gbc.gridx = 1;
+                transporteFrame.add(temperaturaMinimaField, gbc);
+
+                gbc.gridx = 0;
+                gbc.gridy = 10;
+                transporteFrame.add(new JLabel("Temperatura máxima:"), gbc);
+                JTextField temperaturaMaximaField = new JTextField(20);
+                gbc.gridx = 1;
+                transporteFrame.add(temperaturaMaximaField, gbc);
+
+            }
 
             // Número do Transporte
             gbc.gridx = 0;
@@ -296,22 +324,34 @@ public class Tela extends JFrame {
             gbc.gridx = 1;
             transporteFrame.add(situacaoComboBox, gbc);
 
-            // Tipo de Transporte
-            gbc.gridx = 0;
-            gbc.gridy = 9;
-            transporteFrame.add(new JLabel("Tipo de Transporte:"), gbc);
-            JComboBox<String> tipoTransportComboBox = new JComboBox<>(new String[]{"Pessoal", "Carga Viva", "Carga Inanimada"});
-            gbc.gridx = 1;
-            transporteFrame.add(tipoTransportComboBox, gbc);
-
             // Botão para Cadastrar Transporte
             JButton cadastrarTransporteButtonInner = new JButton("Cadastrar Transporte");
             gbc.gridx = 0;
-            gbc.gridy = 10;
+            gbc.gridy = 11;
             gbc.gridwidth = 2;
             transporteFrame.add(cadastrarTransporteButtonInner, gbc);
 
-            cadastrarTransporteButtonInner.addActionListener(event -> {
+            // Limpar campos
+            JButton limparCamposButton = new JButton("Limpar Campos");
+            gbc.gridx = 0;
+            gbc.gridy = 12;
+            gbc.gridwidth = 2;
+            transporteFrame.add(limparCamposButton, gbc);
+
+            limparCamposButton.addActionListener(_ -> {
+                numeroTransporteField.setText("");
+                nomeClienteField.setText("");
+                descricaoTransporteField.setText("");
+                pesoTransporteField.setText("");
+                latitudeOrigemField.setText("");
+                latitudeDestinoField.setText("");
+                longitudeOrigemField.setText("");
+                longitudeDestinoField.setText("");
+                situacaoComboBox.setSelectedIndex(0);
+                tipoTransporteComboBox.setSelectedIndex(0);
+            });
+
+            cadastrarTransporteButtonInner.addActionListener(_ -> {
                 String numero = numeroTransporteField.getText();
                 String nomeCliente = nomeClienteField.getText();
                 String descricao = descricaoTransporteField.getText();
@@ -320,8 +360,8 @@ public class Tela extends JFrame {
                 String latitudeDestino = latitudeDestinoField.getText();
                 String longitudeOrigem = longitudeOrigemField.getText();
                 String longitudeDestino = longitudeDestinoField.getText();
-                String situacao = situacaoComboBox.getSelectedItem().toString();
-                String tipoTransporte = tipoTransporteComboBox.getSelectedItem().toString();
+                String situacao = Objects.requireNonNull(situacaoComboBox.getSelectedItem()).toString();
+                String tipoTransporte = Objects.requireNonNull(tipoTransporteComboBox.getSelectedItem()).toString();
 
                 if (!numero.isEmpty() && !nomeCliente.isEmpty() && !descricao.isEmpty() && !peso.isEmpty() && !latitudeOrigem.isEmpty() && !latitudeDestino.isEmpty() && !longitudeOrigem.isEmpty() && !longitudeDestino.isEmpty() && !situacao.isEmpty()) {
                     String mensagem;
@@ -344,34 +384,31 @@ public class Tela extends JFrame {
             transporteFrame.setVisible(true);
         });
 
-        processarTransportesButton.addActionListener(e -> {
-            JOptionPane.showMessageDialog(this, cadastroTransporte.processarTransportesPendentes());
-        });
+        processarTransportesButton.addActionListener(_ -> JOptionPane.showMessageDialog(this, cadastroTransporte.processarTransportesPendentes()));
 
-        relatorioGeralButton.addActionListener(e -> {
+        relatorioGeralButton.addActionListener(_ -> {
             StringBuilder relatorio = new StringBuilder();
 
-            // Adiciona informações dos drones
             relatorio.append("Relatório de Drones:\n");
             for (Drone drone : cadastroDrone.getDronesCadastrados()) {
                 relatorio.append(drone.toString()).append("\n");
+                relatorio.append("\n");
             }
 
-            // Adiciona informações dos transportes
             relatorio.append("\nRelatório de Transportes:\n");
             for (Transporte transporte : cadastroTransporte.getTransportesCadastrados()) {
                 relatorio.append(transporte.toString()).append("\n");
+                relatorio.append("\n");
             }
 
-            // Verifica se há dados para exibir
-            if (relatorio.length() == 0) {
+            if (relatorio.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Não há dados cadastrados.");
             } else {
                 JOptionPane.showMessageDialog(this, relatorio.toString());
             }
         });
 
-        mostrarTransportesButton.addActionListener(e -> {
+        mostrarTransportesButton.addActionListener(_ -> {
             String transportes = cadastroTransporte.mostrarTransportes();
             if (transportes.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Não há transportes cadastrados.");
@@ -380,7 +417,7 @@ public class Tela extends JFrame {
             }
         });
 
-        alterarSituacaoButton.addActionListener(e -> {
+        alterarSituacaoButton.addActionListener(_ -> {
             String numero = JOptionPane.showInputDialog(this, "Digite o número do transporte:");
             if (numero != null && !numero.trim().isEmpty()) {
                 Transporte transporte = cadastroTransporte.buscarTransporte(Integer.parseInt(numero));
@@ -428,12 +465,7 @@ public class Tela extends JFrame {
 //            }
 //        });
 
-        sairButton.addActionListener(e -> {
-            System.exit(0);
-        });
-    }
-
-    private void showCadastroTransporte() {
+        sairButton.addActionListener(_ -> System.exit(0));
     }
 
 }
