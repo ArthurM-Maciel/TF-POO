@@ -57,16 +57,24 @@ public abstract class Transporte {
 
     public abstract double calculaCusto();
 
-    public boolean podeAtender(Transporte transporte) {
-        return true;
-    }
 
-    protected double calcularDistancia() {
-        // Implementar lógica de cálculo de distância
-        return 0;
-    }
     public String toString() {
         return "Número: " + numero + "\nNome do Cliente: " + nomeCliente + "\nDescrição: " + descricao + "\nPeso: " + peso + "\nLatitude Origem: " + latitudeOrigem + "\nLatitude Destino: " + latitudeDestino + "\nLongitude Origem: " + longitudeOrigem + "\nLongitude Destino: " + longitudeDestino + "\nSituação: " + situacao;
     }
 
+    public double getLatitudeOrigem() {
+        return latitudeOrigem;
+    }
+
+    public double getLongitudeOrigem() {
+        return longitudeOrigem;
+    }
+
+    public double getLatitudeDestino() {
+        return latitudeDestino;
+    }
+
+    public double getLongitudeDestino() {
+        return longitudeDestino;
+    }
 }

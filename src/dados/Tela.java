@@ -2,11 +2,17 @@ package dados;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Objects;
 
 public class Tela extends JFrame {
     private final CadastroTransporte cadastroTransporte;
-    private final CadastroDrone cadastroDrone;
+    JTextField capacidadeDroneField = new JTextField(20);
+    JComboBox<String> protegidoComboBox = new JComboBox<>(new String[]{"Sim", "Não"});
+    JTextField pesoMaximoDroneField = new JTextField(20);
+    JComboBox<String> climatizadoComboBox = new JComboBox<>(new String[]{"Sim", "Não"});
 
     public Tela() {
         setTitle("ACMEAirDrones - Sistema de Gerenciamento");
@@ -15,7 +21,6 @@ public class Tela extends JFrame {
         setLayout(new BorderLayout());
 
         cadastroTransporte = new CadastroTransporte();
-        cadastroDrone = new CadastroDrone();
 
         JLabel tituloLabel = new JLabel("MENU PRINCIPAL", SwingConstants.CENTER);
         tituloLabel.setFont(new Font("Arial", Font.BOLD, 24));
@@ -108,6 +113,7 @@ public class Tela extends JFrame {
                 JTextField capacidadeDroneField = new JTextField(20);
                 droneFrame.add(capacidadeDroneField, gbc);
             }
+
             if(Objects.equals(tipoDroneComboBox.getSelectedItem(), "Carga Inanimada")){
                 gbc.gridx = 0;
                 gbc.gridy = 8;
@@ -115,6 +121,29 @@ public class Tela extends JFrame {
                 JComboBox<String> protegidoComboBox = new JComboBox<>(new String[]{"Sim", "Não"});
                 gbc.gridx = 1;
                 droneFrame.add(protegidoComboBox, gbc);
+
+                // Peso Máximo do Drone
+                gbc.gridx = 0;
+                gbc.gridy = 3;
+                droneFrame.add(new JLabel("Peso Máximo:"), gbc);
+                JTextField pesoMaximoDroneField = new JTextField(20);
+                gbc.gridx = 1;
+                droneFrame.add(pesoMaximoDroneField, gbc);
+            }
+            if(Objects.equals(tipoDroneComboBox.getSelectedItem(), "Carga Viva")){
+                gbc.gridx = 0;
+                gbc.gridy = 3;
+                droneFrame.add(new JLabel("Peso Máximo:"), gbc);
+                JTextField pesoMaximoDroneField = new JTextField(20);
+                gbc.gridx = 1;
+                droneFrame.add(pesoMaximoDroneField, gbc);
+
+                gbc.gridx = 0;
+                gbc.gridy = 4;
+                droneFrame.add(new JLabel("Climatizado:"), gbc);
+                JComboBox<String> climatizadoComboBox = new JComboBox<>(new String[]{"Sim", "Não"});
+                gbc.gridx = 1;
+                droneFrame.add(climatizadoComboBox, gbc);
             }
 
             // Código do Drone
@@ -140,22 +169,6 @@ public class Tela extends JFrame {
             JTextField autonomiaDroneField = new JTextField(20);
             gbc.gridx = 1;
             droneFrame.add(autonomiaDroneField, gbc);
-
-            // Peso Máximo do Drone
-            gbc.gridx = 0;
-            gbc.gridy = 3;
-            droneFrame.add(new JLabel("Peso Máximo:"), gbc);
-            JTextField pesoMaximoDroneField = new JTextField(20);
-            gbc.gridx = 1;
-            droneFrame.add(pesoMaximoDroneField, gbc);
-
-            // Climatizado
-            gbc.gridx = 0;
-            gbc.gridy = 4;
-            droneFrame.add(new JLabel("Climatizado:"), gbc);
-            JComboBox<String> climatizadoComboBox = new JComboBox<>(new String[]{"Sim", "Não"});
-            gbc.gridx = 1;
-            droneFrame.add(climatizadoComboBox, gbc);
 
             // Botão para Cadastrar Drone
             JButton cadastrarDroneButtonInner = new JButton("Cadastrar Drone");
@@ -189,18 +202,20 @@ public class Tela extends JFrame {
                 String pesoMaximo = pesoMaximoDroneField.getText();
                 String climatizado = Objects.requireNonNull(climatizadoComboBox.getSelectedItem()).toString();
                 String tipoDrone = Objects.requireNonNull(tipoDroneComboBox.getSelectedItem()).toString();
+                String capacidade = capacidadeDroneField.getText();
+                String protegido = Objects.requireNonNull(protegidoComboBox.getSelectedItem()).toString();
 
                 if (!codigo.isEmpty() && !custoFixo.isEmpty() && !autonomia.isEmpty() && !pesoMaximo.isEmpty() && !climatizado.isEmpty()) {
                     String mensagem;
                     if (tipoDrone.equals("Pessoal")) {
-                        DronePessoal dronePessoal = new DronePessoal(codigo, Double.parseDouble(custoFixo), Double.parseDouble(autonomia), Double.parseDouble(pesoMaximo), climatizado.equals("Sim"), 0);
-                        mensagem = cadastroDrone.cadastrarDrone(dronePessoal);
+                        DronePessoal dronePessoal = new DronePessoal(codigo, Double.parseDouble(custoFixo), Double.parseDouble(autonomia), Integer.parseInt(capacidade));
+                        mensagem = cadastroTransporte.cadastrarDrone(dronePessoal);
                     } else if (tipoDrone.equals("Carga Viva")) {
                         DroneCargaViva droneCargaViva = new DroneCargaViva(codigo, Double.parseDouble(custoFixo), Double.parseDouble(autonomia), Double.parseDouble(pesoMaximo), climatizado.equals("Sim"));
-                        mensagem = cadastroDrone.cadastrarDrone(droneCargaViva);
+                        mensagem = cadastroTransporte.cadastrarDrone(droneCargaViva);
                     } else {
-                        DroneCargaInanimada droneCargaInanimada = new DroneCargaInanimada(codigo, Double.parseDouble(custoFixo), Double.parseDouble(autonomia), Double.parseDouble(pesoMaximo), climatizado.equals("Sim"), false);
-                        mensagem = cadastroDrone.cadastrarDrone(droneCargaInanimada);
+                        DroneCargaInanimada droneCargaInanimada = new DroneCargaInanimada(codigo, Double.parseDouble(custoFixo), Double.parseDouble(autonomia), Double.parseDouble(pesoMaximo), protegido.equals("Sim"));
+                        mensagem = cadastroTransporte.cadastrarDrone(droneCargaInanimada);
                     }
                     JOptionPane.showMessageDialog(droneFrame, mensagem);
                 } else {
@@ -316,13 +331,13 @@ public class Tela extends JFrame {
             gbc.gridx = 1;
             transporteFrame.add(longitudeDestinoField, gbc);
 
-            // Situação
-            gbc.gridx = 0;
-            gbc.gridy = 8;
-            transporteFrame.add(new JLabel("Situação:"), gbc);
-            JComboBox<String> situacaoComboBox = new JComboBox<>(new String[]{"PENDENTE", "EM ANDAMENTO", "TERMINADO", "CANCELADO"});
-            gbc.gridx = 1;
-            transporteFrame.add(situacaoComboBox, gbc);
+//            // Situação
+//            gbc.gridx = 0;
+//            gbc.gridy = 8;
+//            transporteFrame.add(new JLabel("Situação:"), gbc);
+//            JComboBox<String> situacaoComboBox = new JComboBox<>(new String[]{"PENDENTE", "EM ANDAMENTO", "TERMINADO", "CANCELADO"});
+//            gbc.gridx = 1;
+//            transporteFrame.add(situacaoComboBox, gbc);
 
             // Botão para Cadastrar Transporte
             JButton cadastrarTransporteButtonInner = new JButton("Cadastrar Transporte");
@@ -347,7 +362,7 @@ public class Tela extends JFrame {
                 latitudeDestinoField.setText("");
                 longitudeOrigemField.setText("");
                 longitudeDestinoField.setText("");
-                situacaoComboBox.setSelectedIndex(0);
+//                situacaoComboBox.setSelectedIndex(0);
                 tipoTransporteComboBox.setSelectedIndex(0);
             });
 
@@ -360,10 +375,10 @@ public class Tela extends JFrame {
                 String latitudeDestino = latitudeDestinoField.getText();
                 String longitudeOrigem = longitudeOrigemField.getText();
                 String longitudeDestino = longitudeDestinoField.getText();
-                String situacao = Objects.requireNonNull(situacaoComboBox.getSelectedItem()).toString();
+                String situacao = "PENDENTE";
                 String tipoTransporte = Objects.requireNonNull(tipoTransporteComboBox.getSelectedItem()).toString();
 
-                if (!numero.isEmpty() && !nomeCliente.isEmpty() && !descricao.isEmpty() && !peso.isEmpty() && !latitudeOrigem.isEmpty() && !latitudeDestino.isEmpty() && !longitudeOrigem.isEmpty() && !longitudeDestino.isEmpty() && !situacao.isEmpty()) {
+                if (!numero.isEmpty() && !nomeCliente.isEmpty() && !descricao.isEmpty() && !peso.isEmpty() && !latitudeOrigem.isEmpty() && !latitudeDestino.isEmpty() && !longitudeOrigem.isEmpty() && !longitudeDestino.isEmpty()) {
                     String mensagem;
                     if (tipoTransporte.equals("Pessoal")) {
                         TransportePessoal transportePessoal = new TransportePessoal(Integer.parseInt(numero), nomeCliente, descricao, Double.parseDouble(peso), Double.parseDouble(latitudeOrigem), Double.parseDouble(latitudeDestino), Double.parseDouble(longitudeOrigem), Double.parseDouble(longitudeDestino), Estado.valueOf(situacao), 0);
@@ -390,7 +405,7 @@ public class Tela extends JFrame {
             StringBuilder relatorio = new StringBuilder();
 
             relatorio.append("Relatório de Drones:\n");
-            for (Drone drone : cadastroDrone.getDronesCadastrados()) {
+            for (Drone drone : cadastroTransporte.getDronesCadastrados()) {
                 relatorio.append(drone.toString()).append("\n");
                 relatorio.append("\n");
             }
@@ -419,6 +434,7 @@ public class Tela extends JFrame {
 
         alterarSituacaoButton.addActionListener(_ -> {
             String numero = JOptionPane.showInputDialog(this, "Digite o número do transporte:");
+
             if (numero != null && !numero.trim().isEmpty()) {
                 Transporte transporte = cadastroTransporte.buscarTransporte(Integer.parseInt(numero));
                 if (transporte == null) {
@@ -426,7 +442,7 @@ public class Tela extends JFrame {
                 } else if (transporte.getSituacao() == Estado.TERMINADO || transporte.getSituacao() == Estado.CANCELADO) {
                     JOptionPane.showMessageDialog(this, "Erro: Transporte não pode ser alterado.");
                 } else {
-                    String novaSituacao = JOptionPane.showInputDialog(this, "Digite a nova situação:");
+                    String novaSituacao = JOptionPane.showInputDialog(this, "Digite a nova situação: (PENDENTE, ALOCADO, TERMINADO, CANCELADO)");
                     cadastroTransporte.alterarSituacaoTransporte(Integer.parseInt(numero), novaSituacao);
                     JOptionPane.showMessageDialog(this, "Situação alterada com sucesso!");
                 }
@@ -435,15 +451,15 @@ public class Tela extends JFrame {
             }
         });
 
-//        leituraSimulacaoButton.addActionListener(e -> {
-//            String nomeArquivo = JOptionPane.showInputDialog(this, "Digite o nome do arquivo de simulação (sem extensão):");
-//            if (nomeArquivo != null && !nomeArquivo.trim().isEmpty()) {
-//                String mensagem = leituraSimulacao(nomeArquivo);
-//                JOptionPane.showMessageDialog(this, mensagem);
-//            } else {
-//                JOptionPane.showMessageDialog(this, "Nome do arquivo inválido.");
-//            }
-//        });
+        leituraSimulacaoButton.addActionListener(e -> {
+            String nomeArquivo = JOptionPane.showInputDialog(this, "Digite o nome do arquivo de simulação (sem extensão):");
+            if (nomeArquivo != null && !nomeArquivo.trim().isEmpty()) {
+                String mensagem = leituraSimulacao(nomeArquivo);
+                JOptionPane.showMessageDialog(this, mensagem);
+            } else {
+                JOptionPane.showMessageDialog(this, "Nome do arquivo inválido.");
+            }
+        });
 //
 //        salvarDadosButton.addActionListener(e -> {
 //            String nomeArquivo = JOptionPane.showInputDialog(this, "Digite o nome do arquivo para salvar os dados (sem extensão):");
@@ -466,6 +482,93 @@ public class Tela extends JFrame {
 //        });
 
         sairButton.addActionListener(_ -> System.exit(0));
+
+
     }
 
-}
+    public String leituraSimulacao(String nomeArquivo) {
+        StringBuilder mensagem = new StringBuilder();
+        String delimiter = ";";
+        String dronesFile = "src/dados/" + nomeArquivo + "-DRONES.CSV";
+        String transportesFile = "src/dados/" + nomeArquivo + "-TRANSPORTES.CSV";
+
+        // Read drones data
+        try (BufferedReader br = new BufferedReader(new FileReader(dronesFile))) {
+            br.readLine();
+            String linha;
+            while ((linha = br.readLine()) != null) {
+                String[] dados = linha.split(delimiter);
+                try {
+                    int tipo = Integer.parseInt(dados[0]);
+                    String codigo = dados[1];
+                    double custoFixo = Double.parseDouble(dados[2]);
+                    double autonomia = Double.parseDouble(dados[3]);
+                    double pesoMaximo = Double.parseDouble(dados[4]);
+                    boolean climatizado = Boolean.parseBoolean(dados[5]);
+
+                    Drone drone;
+                    if (tipo == 1) {
+                        drone = new DronePessoal(codigo, custoFixo, autonomia, Integer.parseInt(dados[4]));
+                    } else if (tipo == 2) {
+                        drone = new DroneCargaInanimada(codigo, custoFixo, autonomia, pesoMaximo, Boolean.parseBoolean(dados[5]));
+                    } else {
+                        drone = new DroneCargaViva(codigo, custoFixo, autonomia, pesoMaximo, climatizado);
+                    }
+                    mensagem.append(cadastroTransporte.cadastrarDrone(drone)).append("\n");
+                } catch (Exception e) {
+                    mensagem.append("Erro ao processar linha de drone: ").append(linha).append("\n");
+                }
+            }
+        } catch (IOException e) {
+            mensagem.append("Erro ao ler o arquivo de drones: ").append(e.getMessage()).append("\n");
+        }
+
+        // Read transportes data
+        try (BufferedReader br = new BufferedReader(new FileReader(transportesFile))) {
+            br.readLine();
+            String linha;
+            while ((linha = br.readLine()) != null) {
+                String[] dados = linha.split(delimiter);
+                try {
+                    int tipo = Integer.parseInt(dados[0]);
+                    int numero = Integer.parseInt(dados[1]);
+                    String nomeCliente = dados[2];
+                    String descricao = dados[3];
+                    double peso = Double.parseDouble(dados[4]);
+                    double latitudeOrigem = Double.parseDouble(dados[5]);
+                    double longitudeOrigem = Double.parseDouble(dados[6]);
+                    double latitudeDestino = Double.parseDouble(dados[7]);
+                    double longitudeDestino = Double.parseDouble(dados[8]);
+                    Estado situacao = Estado.PENDENTE;
+
+                    Transporte transporte;
+                    if (tipo == 1) {
+                        transporte = new TransportePessoal(numero, nomeCliente, descricao, peso, latitudeOrigem, latitudeDestino, longitudeOrigem, longitudeDestino, situacao, Integer.parseInt(dados[9]));
+                    } else if (tipo == 2) {
+                        transporte = new TransporteCargaInanimada(numero, nomeCliente, descricao, peso, latitudeOrigem, latitudeDestino, longitudeOrigem, longitudeDestino, situacao, Boolean.parseBoolean(dados[9]));
+                    } else {
+                        transporte = new TransporteCargaViva(numero, nomeCliente, descricao, peso, latitudeOrigem, latitudeDestino, longitudeOrigem, longitudeDestino, situacao, Double.parseDouble(dados[9]), Double.parseDouble(dados[10]));
+                    }
+                    cadastroTransporte.getTransportesPendentes().add(transporte);
+                    mensagem.append(cadastroTransporte.cadastrarTransporte(transporte)).append("\n");
+                } catch (Exception e) {
+                    mensagem.append("Erro ao processar linha de transporte: ").append(linha).append("\n");
+                }
+            }
+        } catch (IOException e) {
+            mensagem.append("Erro ao ler o arquivo de transportes: ").append(e.getMessage()).append("\n");
+        }
+
+        mensagem.append("\nDrones cadastrados:\n");
+        for (Drone drone : cadastroTransporte.getDronesCadastrados()) {
+            mensagem.append(drone).append("\n");
+        }
+
+        mensagem.append("\nTransportes cadastrados:\n");
+        for (Transporte transporte : cadastroTransporte.getTransportesCadastrados()) {
+            mensagem.append(transporte).append("\n");
+        }
+
+        return mensagem.toString();
+    }
+    }
