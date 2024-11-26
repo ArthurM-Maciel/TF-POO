@@ -440,6 +440,7 @@ public class Tela extends JFrame {
                 } else if (transporte.getSituacao() == Estado.TERMINADO || transporte.getSituacao() == Estado.CANCELADO) {
                     JOptionPane.showMessageDialog(this, "Erro: Transporte não pode ser alterado.");
                 } else {
+                    JOptionPane.showMessageDialog(this, "Transporte selecionado:" + transporte);
                     String novaSituacao = JOptionPane.showInputDialog(this, "Digite a nova situação: (PENDENTE, ALOCADO, TERMINADO, CANCELADO)");
                     cadastroTransporte.alterarSituacaoTransporte(Integer.parseInt(numero), novaSituacao);
                     JOptionPane.showMessageDialog(this, "Situação alterada com sucesso!");
