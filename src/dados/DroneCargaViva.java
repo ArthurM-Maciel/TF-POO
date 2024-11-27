@@ -20,4 +20,9 @@ public class DroneCargaViva extends DroneCarga {
         else
             return getCustoFixo() +  10;
     }
+
+    @Override
+    public String toString() {
+        return "Drone de Carga Viva " + getCodigo() + " - Custo por km: R$ " + calculaCustoKm() + " - Peso Máximo: " + getPesoMaximo() + "kg";
+    }
 }

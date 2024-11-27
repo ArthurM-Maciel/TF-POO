@@ -51,12 +51,18 @@ public abstract class Transporte {
         return situacao;
     }
 
-
     public abstract double calculaCusto();
 
 
+    @Override
     public String toString() {
-        return "Número: " + numero + "\nNome do Cliente: " + nomeCliente + "\nDescrição: " + descricao + "\nPeso: " + peso + "\nLatitude Origem: " + latitudeOrigem + "\nLatitude Destino: " + latitudeDestino + "\nLongitude Origem: " + longitudeOrigem + "\nLongitude Destino: " + longitudeDestino + "\nSituação: " + situacao;
+        try {
+            double custo = calculaCusto();
+            return "Número: " + numero + "\nNome do Cliente: " + nomeCliente + "\nDescrição: " + descricao + "\nPeso: " + peso + "\nLatitude Origem: " + latitudeOrigem + "\nLatitude Destino: " + latitudeDestino + "\nLongitude Origem: " + longitudeOrigem + "\nLongitude Destino: " + longitudeDestino + "\nDrone alocado: " + drone + "\nSituação: " + situacao + "\nCusto: R$ " + custo;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Erro ao calcular custo";
+        }
     }
 
     public double getLatitudeOrigem() {
@@ -77,6 +83,10 @@ public abstract class Transporte {
 
     public Drone getDrone() {
         return drone;
+    }
+
+    public void setDrone(Drone drone) {
+        this.drone = drone;
     }
 
     public double calculaDistancia() {

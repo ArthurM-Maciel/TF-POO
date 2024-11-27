@@ -13,10 +13,6 @@ public class DronePessoal extends Drone {
         return getCustoFixo() +  quantidadeMaximaPessoas*2;
     }
 
-    public int getQuantidadeMaximaPessoas() {
-        return quantidadeMaximaPessoas;
-    }
-
     public int getQtdMaxPessoas() {
         return quantidadeMaximaPessoas;
     }

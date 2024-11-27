@@ -8,23 +8,25 @@ public class TransporteCargaInanimada extends Transporte {
         this.cargaPerigosa = cargaPerigosa;
     }
 
-    public boolean isCargaPerigosa() {
-        return cargaPerigosa;
-    }
-
-    public void setCargaPerigosa(boolean cargaPerigosa) {
-        this.cargaPerigosa = cargaPerigosa;
-    }
-
     @Override
     public double calculaCusto() {
-        if(cargaPerigosa)
-            return (getDrone().calculaCustoKm() * calculaDistancia()) + 500;
+        if(getDrone()!=null) {
+            if(cargaPerigosa) {
+                return (getDrone().calculaCustoKm() * calculaDistancia()) + 500;
+            }else {
+                return (getDrone().calculaCustoKm() * calculaDistancia());
+            }
+        }
         else
-            return (getDrone().calculaCustoKm() * calculaDistancia());
+            return 0;
     }
 
     public boolean isPerigosa() {
         return cargaPerigosa;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + "\nCarga Perigosa: " + cargaPerigosa;
     }
 }

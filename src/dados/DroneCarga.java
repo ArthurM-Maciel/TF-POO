@@ -32,4 +32,8 @@ public abstract class DroneCarga extends Drone {
         return (dist);
     }
 
+    @Override
+    public String toString() {
+        return "Drone de Carga " + getCodigo() + " - Custo por km: R$ " + calculaCustoKm() + " - Peso Máximo: " + pesoMaximo + "kg";
+    }
 }

@@ -34,6 +34,7 @@ public class CadastroTransporte {
                 if(drone instanceof DroneCarga) {
                     if (((DroneCarga) drone).podeAtender(transporte)) {
                         transporte.setSituacao(Estado.ALOCADO);
+                        transporte.setDrone(drone);
                         buscarTransporte(transporte.getNumero()).setSituacao(Estado.ALOCADO);
                         alocado = true;
                         break;
@@ -62,17 +63,6 @@ public class CadastroTransporte {
         return "Transporte cadastrado com sucesso!";
     }
 
-    public String mostrarTransportesPendentes() {
-        if (transportesPendentes.isEmpty()) {
-            return "Não há transportes pendentes.";
-        }
-        StringBuilder sb = new StringBuilder("Transportes Pendentes:\n");
-        for (Transporte t : transportesPendentes) {
-            sb.append(t).append("\n");
-        }
-        return sb.toString();
-    }
-
     public String mostrarTransportes() {
         if (transportesCadastrados.isEmpty()) {
             return "Não há transportes cadastrados.";
@@ -80,36 +70,11 @@ public class CadastroTransporte {
         StringBuilder sb = new StringBuilder("Transportes Cadastrados:\n");
         for (Transporte t : transportesCadastrados) {
             sb.append(t).append("\n");
+            sb.append("\n");
         }
         return sb.toString();
     }
 
-    public void confirmarTransporte(int numero) {
-        Transporte transporte = null;
-        for (Transporte t : transportesPendentes) {
-            if (t.getNumero() == numero) {
-                transporte = t;
-                break;
-            }
-        }
-        if (transporte != null) {
-            transportesPendentes.remove(transporte);
-            transportesCadastrados.add(transporte);
-        }
-    }
-
-    public void cancelarTransporte(int numero) {
-        transportesCadastrados.removeIf(t -> t.getNumero() == numero);
-    }
-
-    public void terminarTransporte(int numero) {
-        for (Transporte t : transportesCadastrados) {
-            if (t.getNumero() == numero) {
-                t.setSituacao(Estado.TERMINADO);
-                break;
-            }
-        }
-    }
 
     public List<Transporte> getTransportesCadastrados() {
         return transportesCadastrados;
@@ -157,10 +122,6 @@ public class CadastroTransporte {
         }
         dronesDisponiveis.add(index, drone);
         return "Drone cadastrado com sucesso!";
-    }
-
-    public List<Drone> getDronesDisponiveis() {
-        return dronesDisponiveis;
     }
 
     public ArrayList<Drone> getDronesCadastrados() {

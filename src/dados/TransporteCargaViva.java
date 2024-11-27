@@ -12,11 +12,15 @@ public class TransporteCargaViva extends Transporte {
 
     @Override
     public double calculaCusto() {
-        if(temperaturaMinima-temperaturaMaxima > 10|| temperaturaMaxima-temperaturaMinima > 10)
-            return (getDrone().calculaCustoKm() * calculaDistancia()) + 1000;
+        if(getDrone()!=null) {
+            if (temperaturaMinima - temperaturaMaxima > 10 || temperaturaMaxima - temperaturaMinima > 10) {
+                return (getDrone().calculaCustoKm() * calculaDistancia()) + 1000;
+            } else {
+                return (getDrone().calculaCustoKm() * calculaDistancia());
+            }
+        }
         else
-            return (getDrone().calculaCustoKm() * calculaDistancia());
-
+            return 0;
     }
 
     public double getTempMin() {
@@ -24,5 +28,10 @@ public class TransporteCargaViva extends Transporte {
     }
     public double getTempMax() {
         return temperaturaMaxima;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + "\nTemperatura Mínima: " + temperaturaMinima + "\nTemperatura Máxima: " + temperaturaMaxima ;
     }
 }

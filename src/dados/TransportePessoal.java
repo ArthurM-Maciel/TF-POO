@@ -12,12 +12,17 @@ public class TransportePessoal extends Transporte {
         return qtdPessoas;
     }
 
-    public void setQtdPessoas(int qtdPessoas) {
-        this.qtdPessoas = qtdPessoas;
+    @Override
+    public double calculaCusto() {
+        if(getDrone()!=null) {
+            return (getDrone().calculaCustoKm() * calculaDistancia()) + qtdPessoas*10;
+        }
+        else
+            return 0;
     }
 
     @Override
-    public double calculaCusto() {
-        return (getDrone().calculaCustoKm() * calculaDistancia()) + qtdPessoas*10;
+    public String toString() {
+        return super.toString() + "\nQuantidade de Pessoas: " + qtdPessoas ;
     }
 }

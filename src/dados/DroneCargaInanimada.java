@@ -8,14 +8,6 @@ public class DroneCargaInanimada  extends DroneCarga{
         this.protecao = protecao;
     }
 
-    public boolean isProtecao() {
-        return protecao;
-    }
-
-    public boolean podeAtender() {
-        return true;
-    }
-
     public boolean isProtegido() {
         return protecao;
     }
@@ -26,6 +18,11 @@ public class DroneCargaInanimada  extends DroneCarga{
             return getCustoFixo() +  10;
         else
             return getCustoFixo() +  5;
+    }
+
+    @Override
+    public String toString() {
+        return "Drone de Carga Inanimada " + getCodigo() + " - Custo por km: R$ " + calculaCustoKm() + " - Peso Máximo: " + getPesoMaximo() + "kg";
     }
 }
 
