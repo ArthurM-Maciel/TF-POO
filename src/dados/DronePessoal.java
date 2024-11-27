@@ -1,27 +1,19 @@
 package dados;
 
-public class DronePessoal {
-    private int codigo;
-    private String modelo;
+public class DronePessoal extends Drone {
+    private int quantidadeMaximaPessoas;
 
-    public DronePessoal(int codigo, String modelo) {
-        this.codigo = codigo;
-        this.modelo = modelo;
-    }
-
-    public int getCodigo() {
-        return codigo;
-    }
-
-    public String getModelo() {
-        return modelo;
+    public DronePessoal(String codigo, double custoFixo, double autonomia, int quantidadeMaximaPessoas) {
+        super(codigo, custoFixo, autonomia);
+        this.quantidadeMaximaPessoas = quantidadeMaximaPessoas;
     }
 
     @Override
-    public String toString() {
-        return "DronePessoal{" +
-                "codigo=" + codigo +
-                ", modelo='" + modelo + '\'' +
-                '}';
+    public double calculaCustoKm() {
+        return getCustoFixo() +  quantidadeMaximaPessoas*2;
+    }
+
+    public int getQtdMaxPessoas() {
+        return quantidadeMaximaPessoas;
     }
 }

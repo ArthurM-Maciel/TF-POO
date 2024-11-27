@@ -1,30 +1,39 @@
 package dados;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+public abstract class DroneCarga extends Drone {
+    private double pesoMaximo;
 
-public abstract class DroneCarga extends Drones {
-    private ArrayList<CadastroDrone> drones = new ArrayList<>();
-
-    public DroneCarga(int codigo, String modelo) {
-        super(codigo, modelo);
+    public DroneCarga(String codigo, double custoFixo, double autonomia, double pesoMaximo) {
+        super(codigo, custoFixo, autonomia);
+        this.pesoMaximo = pesoMaximo;
     }
 
-    public ArrayList<CadastroDrone> getDrones() {
-        return drones;
+    public double getPesoMaximo() {
+        return pesoMaximo;
     }
 
-    public void addDrone(CadastroDrone drone) {
-        drones.add(drone);
-        Collections.sort(drones, new Comparator<CadastroDrone>() {
-            @Override
-            public int compare(CadastroDrone drone1, CadastroDrone drone2) {
-                return drone1.getCodigo().compareTo(drone2.getCodigo());
-            }
-        });
+
+    public boolean podeAtender(Transporte transporte) {
+        if (transporte.getPeso() > this.pesoMaximo) {
+            return false;
+        }
+
+        double distancia = calcularDistancia(transporte.getLatitudeOrigem(), transporte.getLongitudeOrigem(), transporte.getLatitudeDestino(), transporte.getLongitudeDestino());
+        return !(distancia > this.getAutonomia());
+    }
+
+    private double calcularDistancia(double latitudeOrigem, double longitudeOrigem, double latitudeDestino, double longitudeDestino) {
+        double theta = longitudeOrigem - longitudeDestino;
+        double dist = Math.sin(Math.toRadians(latitudeOrigem)) * Math.sin(Math.toRadians(latitudeDestino)) + Math.cos(Math.toRadians(latitudeOrigem)) * Math.cos(Math.toRadians(latitudeDestino)) * Math.cos(Math.toRadians(theta));
+        dist = Math.acos(dist);
+        dist = Math.toDegrees(dist);
+        dist = dist * 60 * 1.1515;
+        dist = dist * 1.609344;
+        return (dist);
     }
 
     @Override
-    public abstract double calcularCustoVariado();
+    public String toString() {
+        return "Drone de Carga " + getCodigo() + " - Custo por km: R$ " + calculaCustoKm() + " - Peso Máximo: " + pesoMaximo + "kg";
+    }
 }

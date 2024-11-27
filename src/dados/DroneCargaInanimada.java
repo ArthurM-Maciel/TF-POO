@@ -1,15 +1,28 @@
 package dados;
 
-public class DroneCargaInanimada extends DroneCarga {
+public class DroneCargaInanimada  extends DroneCarga{
     private boolean protecao;
 
-    public DroneCargaInanimada(int codigo, String modelo, boolean protecao) {
-        super(codigo, modelo);
+    public DroneCargaInanimada(String codigo, double custoFixo, double autonomia, double pesoMaximo, boolean protecao) {
+        super(codigo, custoFixo, autonomia, pesoMaximo);
         this.protecao = protecao;
     }
 
+    public boolean isProtegido() {
+        return protecao;
+    }
+
     @Override
-    public double calcularCustoVariado() {
-        return protecao ? 10.0 : 5.0;
+    public double calculaCustoKm() {
+        if(protecao)
+            return getCustoFixo() +  10;
+        else
+            return getCustoFixo() +  5;
+    }
+
+    @Override
+    public String toString() {
+        return "Drone de Carga Inanimada " + getCodigo() + " - Custo por km: R$ " + calculaCustoKm() + " - Peso Máximo: " + getPesoMaximo() + "kg";
     }
 }
+
