@@ -104,9 +104,9 @@ public class Tela extends JFrame {
             gbc.insets = new Insets(10, 10, 10, 10);
             gbc.fill = GridBagConstraints.HORIZONTAL;
 
-            JTextField qtdMaxPessoasField = new JTextField(20);
+            JTextField qtdMaxPessoasField = new NumericTextField(20);
             JComboBox<String> protegidoComboBox = new JComboBox<>(new String[]{"Sim", "Não"});
-            JTextField pesoMaximoDroneField = new JTextField(20);
+            JTextField pesoMaximoDroneField = new NumericTextField(20);
             JComboBox<String> climatizadoComboBox = new JComboBox<>(new String[]{"Sim", "Não"});
 
             if (Objects.equals(tipoDroneComboBox.getSelectedItem(), "Pessoal")) {
@@ -148,21 +148,21 @@ public class Tela extends JFrame {
             gbc.gridx = 0;
             gbc.gridy = 0;
             droneFrame.add(new JLabel("Código do Drone:"), gbc);
-            JTextField codigoDroneField = new JTextField(20);
+            JTextField codigoDroneField = new NumericTextField(20);
             gbc.gridx = 1;
             droneFrame.add(codigoDroneField, gbc);
 
             gbc.gridx = 0;
             gbc.gridy = 1;
             droneFrame.add(new JLabel("Custo Fixo:"), gbc);
-            JTextField custoFixoDroneField = new JTextField(20);
+            JTextField custoFixoDroneField = new NumericTextField(20);
             gbc.gridx = 1;
             droneFrame.add(custoFixoDroneField, gbc);
 
             gbc.gridx = 0;
             gbc.gridy = 2;
             droneFrame.add(new JLabel("Autonomia:"), gbc);
-            JTextField autonomiaDroneField = new JTextField(20);
+            JTextField autonomiaDroneField = new NumericTextField(20);
             gbc.gridx = 1;
             droneFrame.add(autonomiaDroneField, gbc);
 
@@ -247,10 +247,10 @@ public class Tela extends JFrame {
             gbc.insets = new Insets(10, 10, 10, 10);
             gbc.fill = GridBagConstraints.HORIZONTAL;
 
-            JTextField capacidadeField = new JTextField(20);
+            JTextField capacidadeField = new NumericTextField(20);
             JComboBox<String> protegidoComboBox = new JComboBox<>(new String[]{"Sim", "Não"});
-            JTextField temperaturaMinimaField = new JTextField(20);
-            JTextField temperaturaMaximaField = new JTextField(20);
+            JTextField temperaturaMinimaField = new NumericTextField(20);
+            JTextField temperaturaMaximaField = new NumericTextField(20);
 
             if (Objects.equals(tipoTransporteComboBox.getSelectedItem(), "Pessoal")) {
                 gbc.gridx = 0;
@@ -284,7 +284,7 @@ public class Tela extends JFrame {
             gbc.gridx = 0;
             gbc.gridy = 0;
             transporteFrame.add(new JLabel("Número do Transporte:"), gbc);
-            JTextField numeroTransporteField = new JTextField(20);
+            JTextField numeroTransporteField = new NumericTextField(20);
             gbc.gridx = 1;
             transporteFrame.add(numeroTransporteField, gbc);
 
@@ -308,7 +308,7 @@ public class Tela extends JFrame {
             gbc.gridx = 0;
             gbc.gridy = 3;
             transporteFrame.add(new JLabel("Peso:"), gbc);
-            JTextField pesoTransporteField = new JTextField(20);
+            JTextField pesoTransporteField = new NumericTextField(20);
             gbc.gridx = 1;
             transporteFrame.add(pesoTransporteField, gbc);
 
@@ -316,7 +316,7 @@ public class Tela extends JFrame {
             gbc.gridx = 0;
             gbc.gridy = 4;
             transporteFrame.add(new JLabel("Latitude Origem:"), gbc);
-            JTextField latitudeOrigemField = new JTextField(20);
+            JTextField latitudeOrigemField = new NumericTextField(20);
             gbc.gridx = 1;
             transporteFrame.add(latitudeOrigemField, gbc);
 
@@ -324,7 +324,7 @@ public class Tela extends JFrame {
             gbc.gridx = 0;
             gbc.gridy = 5;
             transporteFrame.add(new JLabel("Latitude Destino:"), gbc);
-            JTextField latitudeDestinoField = new JTextField(20);
+            JTextField latitudeDestinoField = new NumericTextField(20);
             gbc.gridx = 1;
             transporteFrame.add(latitudeDestinoField, gbc);
 
@@ -332,7 +332,7 @@ public class Tela extends JFrame {
             gbc.gridx = 0;
             gbc.gridy = 6;
             transporteFrame.add(new JLabel("Longitude Origem:"), gbc);
-            JTextField longitudeOrigemField = new JTextField(20);
+            JTextField longitudeOrigemField = new NumericTextField(20);
             gbc.gridx = 1;
             transporteFrame.add(longitudeOrigemField, gbc);
 
@@ -340,7 +340,7 @@ public class Tela extends JFrame {
             gbc.gridx = 0;
             gbc.gridy = 7;
             transporteFrame.add(new JLabel("Longitude Destino:"), gbc);
-            JTextField longitudeDestinoField = new JTextField(20);
+            JTextField longitudeDestinoField = new NumericTextField(20);
             gbc.gridx = 1;
             transporteFrame.add(longitudeDestinoField, gbc);
 
