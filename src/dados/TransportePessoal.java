@@ -18,6 +18,6 @@ public class TransportePessoal extends Transporte {
 
     @Override
     public double calculaCusto() {
-        return 0;
+        return (getDrone().calculaCustoKm() * calculaDistancia()) + qtdPessoas*10;
     }
 }

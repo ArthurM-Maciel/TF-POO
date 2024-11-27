@@ -9,13 +9,15 @@ public class DroneCargaViva extends DroneCarga {
         this.climatizado = climatizado;
     }
 
-    @Override
-    public double calculaCustoVariado() {
-        return this.climatizado ? 20.0 : 10.0;
-    }
-
-
     public boolean isClimatizado() {
         return climatizado;
+    }
+
+    @Override
+    public double calculaCustoKm() {
+        if(climatizado)
+            return getCustoFixo() +  20;
+        else
+            return getCustoFixo() +  10;
     }
 }

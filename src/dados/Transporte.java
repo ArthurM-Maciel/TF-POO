@@ -1,5 +1,8 @@
 package dados;
 
+import static java.lang.Math.*;
+import static java.lang.Math.sqrt;
+
 public abstract class Transporte {
     private int numero;
     private String nomeCliente;
@@ -10,6 +13,7 @@ public abstract class Transporte {
     private double longitudeOrigem;
     private double longitudeDestino;
     private Estado situacao;
+    private Drone drone;
 
     public Transporte(int numero, String nomeCliente, String descricao, double peso, double latitudeOrigem, double latitudeDestino, double longitudeOrigem, double longitudeDestino, Estado situacao) {
         this.numero = numero;
@@ -47,13 +51,6 @@ public abstract class Transporte {
         return situacao;
     }
 
-    public void cancelar() {
-        this.situacao = Estado.CANCELADO;
-    }
-
-    public void terminar() {
-        this.situacao = Estado.TERMINADO;
-    }
 
     public abstract double calculaCusto();
 
@@ -76,5 +73,20 @@ public abstract class Transporte {
 
     public double getLongitudeDestino() {
         return longitudeDestino;
+    }
+
+    public Drone getDrone() {
+        return drone;
+    }
+
+    public double calculaDistancia() {
+        final int R = 6371;
+        double latDistance = toRadians(latitudeDestino - latitudeOrigem);
+        double lonDistance = toRadians(longitudeDestino - longitudeOrigem);
+        double a = sin(latDistance / 2) * sin(latDistance / 2)
+                + cos(toRadians(latitudeOrigem)) * cos(toRadians(latitudeDestino))
+                * sin(lonDistance / 2) * sin(lonDistance / 2);
+        double c = 2 * atan2(sqrt(a), sqrt(1 - a));
+        return R * c;
     }
 }

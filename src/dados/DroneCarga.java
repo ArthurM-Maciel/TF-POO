@@ -12,21 +12,24 @@ public abstract class DroneCarga extends Drone {
         return pesoMaximo;
     }
 
-    @Override
-    public double calculaCustoVariado() {
-        return 0.0;
-    }
+
     public boolean podeAtender(Transporte transporte) {
         if (transporte.getPeso() > this.pesoMaximo) {
             return false;
         }
 
         double distancia = calcularDistancia(transporte.getLatitudeOrigem(), transporte.getLongitudeOrigem(), transporte.getLatitudeDestino(), transporte.getLongitudeDestino());
-        if (distancia > this.getAutonomia()) {
-            return false;
-        }
+        return !(distancia > this.getAutonomia());
+    }
 
-        return true;
+    private double calcularDistancia(double latitudeOrigem, double longitudeOrigem, double latitudeDestino, double longitudeDestino) {
+        double theta = longitudeOrigem - longitudeDestino;
+        double dist = Math.sin(Math.toRadians(latitudeOrigem)) * Math.sin(Math.toRadians(latitudeDestino)) + Math.cos(Math.toRadians(latitudeOrigem)) * Math.cos(Math.toRadians(latitudeDestino)) * Math.cos(Math.toRadians(theta));
+        dist = Math.acos(dist);
+        dist = Math.toDegrees(dist);
+        dist = dist * 60 * 1.1515;
+        dist = dist * 1.609344;
+        return (dist);
     }
 
 }

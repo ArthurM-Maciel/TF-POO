@@ -104,47 +104,47 @@ public class Tela extends JFrame {
             gbc.insets = new Insets(10, 10, 10, 10);
             gbc.fill = GridBagConstraints.HORIZONTAL;
 
-            if(Objects.equals(tipoDroneComboBox.getSelectedItem(), "Pessoal")){
-                gbc.gridx = -1;
+            JTextField qtdMaxPessoasField = new JTextField(20);
+            JComboBox<String> protegidoComboBox = new JComboBox<>(new String[]{"Sim", "Não"});
+            JTextField pesoMaximoDroneField = new JTextField(20);
+            JComboBox<String> climatizadoComboBox = new JComboBox<>(new String[]{"Sim", "Não"});
+
+            if (Objects.equals(tipoDroneComboBox.getSelectedItem(), "Pessoal")) {
+                gbc.gridx = 0;
                 gbc.gridy = 8;
                 droneFrame.add(new JLabel("Qtd. Máx. Pessoas:"), gbc);
-                JTextField capacidadeDroneField = new JTextField(20);
-                droneFrame.add(capacidadeDroneField, gbc);
+                gbc.gridx = 1;
+                droneFrame.add(qtdMaxPessoasField, gbc);
             }
 
-            if(Objects.equals(tipoDroneComboBox.getSelectedItem(), "Carga Inanimada")){
+            if (Objects.equals(tipoDroneComboBox.getSelectedItem(), "Carga Inanimada")) {
                 gbc.gridx = 0;
                 gbc.gridy = 8;
                 droneFrame.add(new JLabel("Protegido:"), gbc);
-                JComboBox<String> protegidoComboBox = new JComboBox<>(new String[]{"Sim", "Não"});
                 gbc.gridx = 1;
                 droneFrame.add(protegidoComboBox, gbc);
 
-                // Peso Máximo do Drone
                 gbc.gridx = 0;
                 gbc.gridy = 3;
                 droneFrame.add(new JLabel("Peso Máximo:"), gbc);
-                JTextField pesoMaximoDroneField = new JTextField(20);
                 gbc.gridx = 1;
                 droneFrame.add(pesoMaximoDroneField, gbc);
             }
-            if(Objects.equals(tipoDroneComboBox.getSelectedItem(), "Carga Viva")){
+
+            if (Objects.equals(tipoDroneComboBox.getSelectedItem(), "Carga Viva")) {
                 gbc.gridx = 0;
                 gbc.gridy = 3;
                 droneFrame.add(new JLabel("Peso Máximo:"), gbc);
-                JTextField pesoMaximoDroneField = new JTextField(20);
                 gbc.gridx = 1;
                 droneFrame.add(pesoMaximoDroneField, gbc);
 
                 gbc.gridx = 0;
                 gbc.gridy = 4;
                 droneFrame.add(new JLabel("Climatizado:"), gbc);
-                JComboBox<String> climatizadoComboBox = new JComboBox<>(new String[]{"Sim", "Não"});
                 gbc.gridx = 1;
                 droneFrame.add(climatizadoComboBox, gbc);
             }
 
-            // Código do Drone
             gbc.gridx = 0;
             gbc.gridy = 0;
             droneFrame.add(new JLabel("Código do Drone:"), gbc);
@@ -152,7 +152,6 @@ public class Tela extends JFrame {
             gbc.gridx = 1;
             droneFrame.add(codigoDroneField, gbc);
 
-            // Custo Fixo do Drone
             gbc.gridx = 0;
             gbc.gridy = 1;
             droneFrame.add(new JLabel("Custo Fixo:"), gbc);
@@ -160,7 +159,6 @@ public class Tela extends JFrame {
             gbc.gridx = 1;
             droneFrame.add(custoFixoDroneField, gbc);
 
-            // Autonomia do Drone
             gbc.gridx = 0;
             gbc.gridy = 2;
             droneFrame.add(new JLabel("Autonomia:"), gbc);
@@ -168,14 +166,12 @@ public class Tela extends JFrame {
             gbc.gridx = 1;
             droneFrame.add(autonomiaDroneField, gbc);
 
-            // Botão para Cadastrar Drone
             JButton cadastrarDroneButtonInner = new JButton("Cadastrar Drone");
             gbc.gridx = 0;
             gbc.gridy = 9;
             gbc.gridwidth = 2;
             droneFrame.add(cadastrarDroneButtonInner, gbc);
 
-            // Limpar campos
             JButton limparCamposButton = new JButton("Limpar Campos");
             gbc.gridx = 0;
             gbc.gridy = 10;
@@ -187,11 +183,11 @@ public class Tela extends JFrame {
                 custoFixoDroneField.setText("");
                 autonomiaDroneField.setText("");
                 pesoMaximoDroneField.setText("");
+                qtdMaxPessoasField.setText("");
+                protegidoComboBox.setSelectedIndex(0);
                 climatizadoComboBox.setSelectedIndex(0);
                 tipoDroneComboBox.setSelectedIndex(0);
             });
-
-            droneFrame.setVisible(true);
 
             cadastrarDroneButtonInner.addActionListener(_ -> {
                 String codigo = codigoDroneField.getText();
@@ -200,22 +196,40 @@ public class Tela extends JFrame {
                 String pesoMaximo = pesoMaximoDroneField.getText();
                 String climatizado = Objects.requireNonNull(climatizadoComboBox.getSelectedItem()).toString();
                 String tipoDrone = Objects.requireNonNull(tipoDroneComboBox.getSelectedItem()).toString();
-                String capacidade = capacidadeDroneField.getText();
+                String capacidade = qtdMaxPessoasField.getText();
                 String protegido = Objects.requireNonNull(protegidoComboBox.getSelectedItem()).toString();
 
-                if (!codigo.isEmpty() && !custoFixo.isEmpty() && !autonomia.isEmpty() && !pesoMaximo.isEmpty() && !climatizado.isEmpty()) {
+                if (!codigo.isEmpty() && !custoFixo.isEmpty() && !autonomia.isEmpty()) {
                     String mensagem;
-                    if (tipoDrone.equals("Pessoal")) {
-                        DronePessoal dronePessoal = new DronePessoal(codigo, Double.parseDouble(custoFixo), Double.parseDouble(autonomia), Integer.parseInt(capacidade));
-                        mensagem = cadastroTransporte.cadastrarDrone(dronePessoal);
-                    } else if (tipoDrone.equals("Carga Viva")) {
-                        DroneCargaViva droneCargaViva = new DroneCargaViva(codigo, Double.parseDouble(custoFixo), Double.parseDouble(autonomia), Double.parseDouble(pesoMaximo), climatizado.equals("Sim"));
-                        mensagem = cadastroTransporte.cadastrarDrone(droneCargaViva);
-                    } else {
-                        DroneCargaInanimada droneCargaInanimada = new DroneCargaInanimada(codigo, Double.parseDouble(custoFixo), Double.parseDouble(autonomia), Double.parseDouble(pesoMaximo), protegido.equals("Sim"));
-                        mensagem = cadastroTransporte.cadastrarDrone(droneCargaInanimada);
+                    switch (tipoDrone) {
+                        case "Pessoal" -> {
+                            if (!capacidade.isEmpty()) {
+                                DronePessoal dronePessoal = new DronePessoal(codigo, Double.parseDouble(custoFixo), Double.parseDouble(autonomia), Integer.parseInt(capacidade));
+                                mensagem = cadastroTransporte.cadastrarDrone(dronePessoal);
+                                JOptionPane.showMessageDialog(droneFrame, mensagem);
+                            } else {
+                                JOptionPane.showMessageDialog(droneFrame, "Por favor, preencha todos os campos.");
+                            }
+                        }
+                        case "Carga Viva" -> {
+                            if (!pesoMaximo.isEmpty() && !climatizado.isEmpty()) {
+                                DroneCargaViva droneCargaViva = new DroneCargaViva(codigo, Double.parseDouble(custoFixo), Double.parseDouble(autonomia), Double.parseDouble(pesoMaximo), climatizado.equals("Sim"));
+                                mensagem = cadastroTransporte.cadastrarDrone(droneCargaViva);
+                                JOptionPane.showMessageDialog(droneFrame, mensagem);
+                            } else {
+                                JOptionPane.showMessageDialog(droneFrame, "Por favor, preencha todos os campos.");
+                            }
+                        }
+                        case "Carga Inanimada" -> {
+                            if (!pesoMaximo.isEmpty() && !protegido.isEmpty()) {
+                                DroneCargaInanimada droneCargaInanimada = new DroneCargaInanimada(codigo, Double.parseDouble(custoFixo), Double.parseDouble(autonomia), Double.parseDouble(pesoMaximo), protegido.equals("Sim"));
+                                mensagem = cadastroTransporte.cadastrarDrone(droneCargaInanimada);
+                                JOptionPane.showMessageDialog(droneFrame, mensagem);
+                            } else {
+                                JOptionPane.showMessageDialog(droneFrame, "Por favor, preencha todos os campos.");
+                            }
+                        }
                     }
-                    JOptionPane.showMessageDialog(droneFrame, mensagem);
                 } else {
                     JOptionPane.showMessageDialog(droneFrame, "Por favor, preencha todos os campos.");
                 }
@@ -233,36 +247,37 @@ public class Tela extends JFrame {
             gbc.insets = new Insets(10, 10, 10, 10);
             gbc.fill = GridBagConstraints.HORIZONTAL;
 
-            if(Objects.equals(tipoTransporteComboBox.getSelectedItem(), "Pessoal")){
-                gbc.gridx = -1;
+            JTextField capacidadeField = new JTextField(20);
+            JComboBox<String> protegidoComboBox = new JComboBox<>(new String[]{"Sim", "Não"});
+            JTextField temperaturaMinimaField = new JTextField(20);
+            JTextField temperaturaMaximaField = new JTextField(20);
+
+            if (Objects.equals(tipoTransporteComboBox.getSelectedItem(), "Pessoal")) {
+                gbc.gridx = 0;
                 gbc.gridy = 9;
                 transporteFrame.add(new JLabel("Qtd. Máx. Pessoas:"), gbc);
-                JTextField capacidadeTransporteField = new JTextField(20);
-                transporteFrame.add(capacidadeTransporteField, gbc);
+                gbc.gridx = 1;
+                transporteFrame.add(capacidadeField, gbc);
             }
-            if(Objects.equals(tipoTransporteComboBox.getSelectedItem(), "Carga Inanimada")){
+            if (Objects.equals(tipoTransporteComboBox.getSelectedItem(), "Carga Inanimada")) {
                 gbc.gridx = 0;
                 gbc.gridy = 9;
                 transporteFrame.add(new JLabel("Carga Perigosa:"), gbc);
-                JComboBox<String> protegidoComboBox = new JComboBox<>(new String[]{"Sim", "Não"});
                 gbc.gridx = 1;
                 transporteFrame.add(protegidoComboBox, gbc);
             }
-            if(Objects.equals(tipoTransporteComboBox.getSelectedItem(), "Carga Viva")){
+            if (Objects.equals(tipoTransporteComboBox.getSelectedItem(), "Carga Viva")) {
                 gbc.gridx = 0;
                 gbc.gridy = 9;
                 transporteFrame.add(new JLabel("Temperatura mínima:"), gbc);
-                JTextField temperaturaMinimaField = new JTextField(20);
                 gbc.gridx = 1;
                 transporteFrame.add(temperaturaMinimaField, gbc);
 
                 gbc.gridx = 0;
                 gbc.gridy = 10;
                 transporteFrame.add(new JLabel("Temperatura máxima:"), gbc);
-                JTextField temperaturaMaximaField = new JTextField(20);
                 gbc.gridx = 1;
                 transporteFrame.add(temperaturaMaximaField, gbc);
-
             }
 
             // Número do Transporte
@@ -329,14 +344,6 @@ public class Tela extends JFrame {
             gbc.gridx = 1;
             transporteFrame.add(longitudeDestinoField, gbc);
 
-//            // Situação
-//            gbc.gridx = 0;
-//            gbc.gridy = 8;
-//            transporteFrame.add(new JLabel("Situação:"), gbc);
-//            JComboBox<String> situacaoComboBox = new JComboBox<>(new String[]{"PENDENTE", "EM ANDAMENTO", "TERMINADO", "CANCELADO"});
-//            gbc.gridx = 1;
-//            transporteFrame.add(situacaoComboBox, gbc);
-
             // Botão para Cadastrar Transporte
             JButton cadastrarTransporteButtonInner = new JButton("Cadastrar Transporte");
             gbc.gridx = 0;
@@ -360,7 +367,6 @@ public class Tela extends JFrame {
                 latitudeDestinoField.setText("");
                 longitudeOrigemField.setText("");
                 longitudeDestinoField.setText("");
-//                situacaoComboBox.setSelectedIndex(0);
                 tipoTransporteComboBox.setSelectedIndex(0);
             });
 
@@ -378,17 +384,35 @@ public class Tela extends JFrame {
 
                 if (!numero.isEmpty() && !nomeCliente.isEmpty() && !descricao.isEmpty() && !peso.isEmpty() && !latitudeOrigem.isEmpty() && !latitudeDestino.isEmpty() && !longitudeOrigem.isEmpty() && !longitudeDestino.isEmpty()) {
                     String mensagem;
-                    if (tipoTransporte.equals("Pessoal")) {
-                        TransportePessoal transportePessoal = new TransportePessoal(Integer.parseInt(numero), nomeCliente, descricao, Double.parseDouble(peso), Double.parseDouble(latitudeOrigem), Double.parseDouble(latitudeDestino), Double.parseDouble(longitudeOrigem), Double.parseDouble(longitudeDestino), Estado.valueOf(situacao), 0);
-                        mensagem = cadastroTransporte.cadastrarTransporte(transportePessoal);
-                    } else if (tipoTransporte.equals("Carga Viva")) {
-                        TransporteCargaViva transporteCargaViva = new TransporteCargaViva(Integer.parseInt(numero), nomeCliente, descricao, Double.parseDouble(peso), Double.parseDouble(latitudeOrigem), Double.parseDouble(latitudeDestino), Double.parseDouble(longitudeOrigem), Double.parseDouble(longitudeDestino), Estado.valueOf(situacao), 0, 0);
-                        mensagem = cadastroTransporte.cadastrarTransporte(transporteCargaViva);
-                    } else {
-                        TransporteCargaInanimada transporteCargaInanimada = new TransporteCargaInanimada(Integer.parseInt(numero), nomeCliente, descricao, Double.parseDouble(peso), Double.parseDouble(latitudeOrigem), Double.parseDouble(latitudeDestino), Double.parseDouble(longitudeOrigem), Double.parseDouble(longitudeDestino), Estado.valueOf(situacao), false);
-                        mensagem = cadastroTransporte.cadastrarTransporte(transporteCargaInanimada);
+                    switch (tipoTransporte) {
+                        case "Pessoal" -> {
+                            String qtdMaxPessoas = capacidadeField.getText();
+                            if (!qtdMaxPessoas.isEmpty()) {
+                                TransportePessoal transportePessoal = new TransportePessoal(Integer.parseInt(numero), nomeCliente, descricao, Double.parseDouble(peso), Double.parseDouble(latitudeOrigem), Double.parseDouble(latitudeDestino), Double.parseDouble(longitudeOrigem), Double.parseDouble(longitudeDestino), Estado.valueOf(situacao), Integer.parseInt(qtdMaxPessoas));
+                                mensagem = cadastroTransporte.cadastrarTransporte(transportePessoal);
+                                JOptionPane.showMessageDialog(transporteFrame, mensagem);
+                            } else {
+                                JOptionPane.showMessageDialog(transporteFrame, "Por favor, preencha todos os campos.");
+                            }
+                        }
+                        case "Carga Inanimada" -> {
+                            boolean perigosa = Objects.equals(protegidoComboBox.getSelectedItem(), "Sim");
+                            TransporteCargaInanimada transporteCargaInanimada = new TransporteCargaInanimada(Integer.parseInt(numero), nomeCliente, descricao, Double.parseDouble(peso), Double.parseDouble(latitudeOrigem), Double.parseDouble(latitudeDestino), Double.parseDouble(longitudeOrigem), Double.parseDouble(longitudeDestino), Estado.valueOf(situacao), perigosa);
+                            mensagem = cadastroTransporte.cadastrarTransporte(transporteCargaInanimada);
+                            JOptionPane.showMessageDialog(transporteFrame, mensagem);
+                        }
+                        case "Carga Viva" -> {
+                            String tempMin = temperaturaMinimaField.getText();
+                            String tempMax = temperaturaMaximaField.getText();
+                            if (!tempMin.isEmpty() && !tempMax.isEmpty()) {
+                                TransporteCargaViva transporteCargaViva = new TransporteCargaViva(Integer.parseInt(numero), nomeCliente, descricao, Double.parseDouble(peso), Double.parseDouble(latitudeOrigem), Double.parseDouble(latitudeDestino), Double.parseDouble(longitudeOrigem), Double.parseDouble(longitudeDestino), Estado.valueOf(situacao), Double.parseDouble(tempMin), Double.parseDouble(tempMax));
+                                mensagem = cadastroTransporte.cadastrarTransporte(transporteCargaViva);
+                                JOptionPane.showMessageDialog(transporteFrame, mensagem);
+                            } else {
+                                JOptionPane.showMessageDialog(transporteFrame, "Por favor, preencha todos os campos.");
+                            }
+                        }
                     }
-                    JOptionPane.showMessageDialog(transporteFrame, mensagem);
                 } else {
                     JOptionPane.showMessageDialog(transporteFrame, "Por favor, preencha todos os campos.");
                 }

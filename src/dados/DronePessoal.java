@@ -8,13 +8,13 @@ public class DronePessoal extends Drone {
         this.quantidadeMaximaPessoas = quantidadeMaximaPessoas;
     }
 
-    public int getQuantidadeMaximaPessoas() {
-        return quantidadeMaximaPessoas;
+    @Override
+    public double calculaCustoKm() {
+        return getCustoFixo() +  quantidadeMaximaPessoas*2;
     }
 
-    @Override
-    public double calculaCustoVariado() {
-        return 2.0 * quantidadeMaximaPessoas;
+    public int getQuantidadeMaximaPessoas() {
+        return quantidadeMaximaPessoas;
     }
 
     public int getQtdMaxPessoas() {

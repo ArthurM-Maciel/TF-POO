@@ -10,25 +10,13 @@ public class TransporteCargaViva extends Transporte {
         this.temperaturaMaxima = temperaturaMaxima;
     }
 
-    public double getTemperaturaMinima() {
-        return temperaturaMinima;
-    }
-
-    public void setTemperaturaMinima(double temperaturaMinima) {
-        this.temperaturaMinima = temperaturaMinima;
-    }
-
-    public double getTemperaturaMaxima() {
-        return temperaturaMaxima;
-    }
-
-    public void setTemperaturaMaxima(double temperaturaMaxima) {
-        this.temperaturaMaxima = temperaturaMaxima;
-    }
-
     @Override
     public double calculaCusto() {
-        return 0;
+        if(temperaturaMinima-temperaturaMaxima > 10|| temperaturaMaxima-temperaturaMinima > 10)
+            return (getDrone().calculaCustoKm() * calculaDistancia()) + 1000;
+        else
+            return (getDrone().calculaCustoKm() * calculaDistancia());
+
     }
 
     public double getTempMin() {

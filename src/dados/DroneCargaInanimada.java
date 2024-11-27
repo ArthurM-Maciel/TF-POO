@@ -12,11 +12,6 @@ public class DroneCargaInanimada  extends DroneCarga{
         return protecao;
     }
 
-    @Override
-    public double calculaCustoVariado() {
-        return protecao ? 10.0 : 5.0;
-    }
-
     public boolean podeAtender() {
         return true;
     }
@@ -24,4 +19,13 @@ public class DroneCargaInanimada  extends DroneCarga{
     public boolean isProtegido() {
         return protecao;
     }
+
+    @Override
+    public double calculaCustoKm() {
+        if(protecao)
+            return getCustoFixo() +  10;
+        else
+            return getCustoFixo() +  5;
+    }
 }
+
